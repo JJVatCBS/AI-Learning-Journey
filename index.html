@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Learning Journey — CBS 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.5/babel.min.js"></script>
+<style>* { margin:0; padding:0; box-sizing:border-box; } body { overflow:hidden; }</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const phases = {
+  de: [
+    { name: "Fundament", color: "#6B7280", chapters: [
+      { id: 1, title: "Woher kommt AI?", subtitle: "Turing → ChatGPT", status: "done" },
+      { id: 2, title: "AI vs. ML vs. DL vs. GenAI", subtitle: "Begriffe einordnen", status: "done" },
+    ]},
+    { name: "Bausteine", color: "#7C6BBF", chapters: [
+      { id: 3, title: "Was ist ein LLM?", subtitle: "Das Sprachmodell", status: "done" },
+      { id: 4, title: "Was ist ein Token?", subtitle: "Einheit der Sprache", status: "done" },
+      { id: 5, title: "Kontextfenster", subtitle: "Wie viel sich AI merkt", status: "done" },
+      { id: 6, title: "Modellauswahl", subtitle: "Open vs. Closed, Kosten", status: "done" },
+    ]},
+    { name: "Praxis", color: "#1D9E75", chapters: [
+      { id: 7, title: "Prompt Engineering", subtitle: "Die richtige Frage stellen", status: "done" },
+      { id: 8, title: "System Prompts", subtitle: "AI dauerhaft steuern", status: "done" },
+      { id: 9, title: "Was ist ein Agent?", subtitle: "AI handelt selbständig", status: "done" },
+      { id: 10, title: "Halluzinationen & Grenzen", subtitle: "Was AI nicht kann", status: "done" },
+      { id: 11, title: "Robots.txt & Web Access", subtitle: "Wenn AI nicht zugreifen darf", status: "done" },
+      { id: 12, title: "Responsible AI", subtitle: "EU AI Act, Datenschutz", status: "done" },
+    ]},
+    { name: "Unternehmensdaten", color: "#D97706", chapters: [
+      { id: 13, title: "RAG", subtitle: "AI + Textdaten", status: "done" },
+      { id: 14, title: "Tabular FM", subtitle: "AI + Tabellendaten (RPT-1)", status: "done" },
+    ]},
+    { name: "Integration & SAP", color: "#6366F1", chapters: [
+      { id: 15, title: "MCP vs. A2A", subtitle: "Agent-Protokolle", status: "done" },
+      { id: 16, title: "SAP Business AI Platform", subtitle: "Joule, KG, Agent Gateway", status: "done" },
+      { id: 17, title: "Skills", subtitle: "Reproduzierbare AI-Kompetenz", status: "done" },
+    ]},
+  ],
+  en: [
+    { name: "Foundation", color: "#6B7280", chapters: [
+      { id: 1, title: "Where does AI come from?", subtitle: "Turing → ChatGPT", status: "done" },
+      { id: 2, title: "AI vs. ML vs. DL vs. GenAI", subtitle: "Understanding the terms", status: "done" },
+    ]},
+    { name: "Building Blocks", color: "#7C6BBF", chapters: [
+      { id: 3, title: "What is an LLM?", subtitle: "The language model", status: "done" },
+      { id: 4, title: "What is a Token?", subtitle: "Unit of language", status: "done" },
+      { id: 5, title: "Context Window", subtitle: "How much AI remembers", status: "done" },
+      { id: 6, title: "Model Selection", subtitle: "Open vs. Closed, costs", status: "done" },
+    ]},
+    { name: "Practice", color: "#1D9E75", chapters: [
+      { id: 7, title: "Prompt Engineering", subtitle: "Asking the right question", status: "done" },
+      { id: 8, title: "System Prompts", subtitle: "Permanently controlling AI", status: "done" },
+      { id: 9, title: "What is an Agent?", subtitle: "AI acts autonomously", status: "done" },
+      { id: 10, title: "Hallucinations & Limits", subtitle: "What AI cannot do", status: "done" },
+      { id: 11, title: "Robots.txt & Web Access", subtitle: "When AI cannot access", status: "done" },
+      { id: 12, title: "Responsible AI", subtitle: "EU AI Act, data privacy", status: "done" },
+    ]},
+    { name: "Enterprise Data", color: "#D97706", chapters: [
+      { id: 13, title: "RAG", subtitle: "AI + text data", status: "done" },
+      { id: 14, title: "Tabular FM", subtitle: "AI + tabular data (RPT-1)", status: "done" },
+    ]},
+    { name: "Integration & SAP", color: "#6366F1", chapters: [
+      { id: 15, title: "MCP vs. A2A", subtitle: "Agent protocols", status: "done" },
+      { id: 16, title: "SAP Business AI Platform", subtitle: "Joule, KG, Agent Gateway", status: "done" },
+      { id: 17, title: "Skills", subtitle: "Reproducible AI competence", status: "done" },
+    ]},
+  ],
+};
+
+const C = {
+  de: {
+  1: {
+    title: "Woher kommt AI?",
+    intro: "Künstliche Intelligenz ist keine Erfindung der letzten Jahre. Die Idee, Maschinen das Denken beizubringen, ist fast so alt wie der Computer selbst. Was sich geändert hat: Seit ca. 2017 haben wir erstmals genug Rechenleistung und Daten, um die Ideen von damals wirklich umzusetzen.",
+    timeline: [
+      { year: "1950", yearVal: 1950, label: "Turing-Test", icon: "💡", sectionIdx: 0, color: "#6B7280" },
+      { year: "1956", yearVal: 1956, label: "Begriff \"AI\"", icon: "🏛️", sectionIdx: 1, color: "#6B7280" },
+      { year: "1970s", yearVal: 1975, label: "AI Winter", icon: "❄️", sectionIdx: 2, color: "#94A3B8" },
+      { year: "1997", yearVal: 1997, label: "Deep Blue", icon: "♟️", sectionIdx: 3, color: "#7C6BBF" },
+      { year: "2012", yearVal: 2012, label: "Deep Learning", icon: "🧠", sectionIdx: 4, color: "#2563EB" },
+      { year: "2017", yearVal: 2017, label: "Transformer", icon: "⚡", sectionIdx: 5, color: "#D97706" },
+      { year: "2022+", yearVal: 2022, label: "LLM-Ära", icon: "🚀", sectionIdx: 6, color: "#1D9E75" },
+    ],
+    sections: [
+      { heading: "1950 — Alan Turing stellt die Frage", text: "Alan Turing veröffentlicht \"Computing Machinery and Intelligence\" und formuliert den Turing-Test: Kann eine Maschine sich so verhalten, dass ein Mensch nicht mehr unterscheiden kann, ob er mit einem Menschen oder einer Maschine spricht?" },
+      { heading: "1956 — Der Begriff entsteht", text: "Auf einer Konferenz am Dartmouth College wird der Begriff \"Artificial Intelligence\" geprägt. Die Forscher glaubten, innerhalb einer Generation könnten Maschinen jedes intellektuelle Problem lösen." },
+      { heading: "1960er–1980er — AI Winter", text: "Erste Expertensysteme entstehen, doch sie waren teuer, fragil und schlecht skalierbar. Es folgte der \"AI Winter\" — eine Phase der Ernüchterung mit gekürzten Fördergeldern." },
+      { heading: "1997 — Deep Blue vs. Kasparov", text: "IBMs Schachcomputer Deep Blue besiegt den Schachweltmeister. Wichtig: Deep Blue war keine lernende AI — Brute-Force, Millionen Züge pro Sekunde, aber kein Verständnis von Schach." },
+      { heading: "2012 — Deep Learning wird praxistauglich", text: "AlexNet gewinnt den ImageNet-Wettbewerb. Drei Faktoren kamen zusammen: Große Datenmengen, leistungsfähige GPUs und verbesserte Algorithmen." },
+      { heading: "2017 — Der Transformer", text: "Google veröffentlicht \"Attention is All You Need\". Die Transformer-Architektur ist die Grundlage aller modernen Sprachmodelle.", video: "eMlx5fFNoYc", sectionLinks: [
+        { label: "Transformer Explainer — Interaktive Demo (Georgia Tech)", url: "https://poloclub.github.io/transformer-explainer/" },
+        { label: "The Illustrated Transformer — Jay Alammar", url: "https://jalammar.github.io/illustrated-transformer/" },
+      ]},
+      { heading: "2022–heute — Die Ära der LLMs", text: "Mit ChatGPT erreicht AI den Mainstream. Es folgen Claude (Anthropic), Gemini (Google), Llama (Meta) und viele weitere." },
+    ],
+    takeaway: "AI ist das Ergebnis von 70 Jahren Forschung. Was fehlte, waren Daten, Rechenleistung und der Transformer.",
+    links: [
+      { label: "Turing-Test (Wikipedia)", url: "https://de.wikipedia.org/wiki/Turing-Test" },
+      { label: "SAP AI Learning Journey", url: "https://learning.sap.com/learning-journeys/exploring-the-sap-enterprise-architecture-framework-foundation" },
+    ],
+  },
+  2: {
+    title: "AI vs. ML vs. DL vs. GenAI",
+    diagram: "ai-hierarchy",
+    intro: "Die Begriffe AI, ML, Deep Learning und LLM werden häufig synonym verwendet — sie beschreiben aber unterschiedliche Dinge.",
+    video: "qYNweeDHiyU",
+    sections: [
+      { heading: "AI — der Oberbegriff", text: "AI ist Technologie, die es Computern ermoeglicht, menschliches Lernen, Verstehen, Problemloesen, Entscheidungsfindung, Kreativitaet und Autonomie zu simulieren. Kurz: Ein Computer trifft Entscheidungen gleich gut oder besser als ein Mensch. Das umfasst regelbasierte Systeme (Spam-Filter, SAP-Workflows), statistische Modelle und lernende Systeme. Wichtig: Nicht jede AI lernt." },
+      { heading: "Machine Learning", text: "Bei ML gibt man Daten + erwartete Ergebnisse rein und bekommt die Regeln (das Modell). Das Modell erkennt Muster in Daten und findet Anomalien — wie das falsche Symbol in einer Sequenz.\n\nVerfahren:\n* Supervised Learning — lernt aus gelabelten Beispielen\n* Unsupervised Learning — findet Strukturen in ungelabelten Daten\n* Reinforcement Learning — lernt durch Versuch und Irrtum" },
+      { heading: "Deep Learning", text: "Neuronale Netze mit vielen Schichten. Kann komplexe Muster erkennen, braucht aber große Datenmengen und viel Rechenleistung (GPUs/TPUs). Das Ergebnis ist oft eine Black Box — die inneren Entscheidungswege sind schwer nachvollziehbar." },
+      { heading: "Foundation Models und GenAI", text: "Foundation Models (FM) sind grosse, vortrainierte Deep-Learning-Modelle, die fuer verschiedene Aufgaben angepasst werden koennen. FM teilen sich in zwei Zweige:\n\nGenAI — erzeugt neue, offene Inhalte:\n* LLM fuer Text — Claude (Anthropic), GPT (OpenAI), Gemini (Google), Llama (Meta)\n* IMG fuer Bilder — DALL-E (OpenAI), Midjourney, Stable Diffusion (Stability AI)\n* AUD fuer Audio — ElevenLabs, Suno, Whisper (OpenAI)\n* VID fuer Video — Sora (OpenAI), Runway, Veo (Google)\n\nPredictive FM — sagt eingeschraenkte Werte vorher (Zahl, Kategorie, Wahrscheinlichkeit):\n* SAP RPT-1 (Relational Pre-Trained Transformer) — prognostiziert Feldwerte in Tabellen: Zahlungsverzoegerungen, Lieferantenrisiken, Kundenabwanderung. Ein einziges vortrainiertes Modell ersetzt hunderte klassische ML-Modelle." },
+      { heading: "Generiert vs. Vorhergesagt", text: "GenAI und Predictive FM nutzen beide Transformer, aber der Output unterscheidet sich grundlegend:\n* GenAI erzeugt offene, kreative Inhalte — wie ein Freitextfeld\n* Predictive FM erzeugt eingeschraenkte Werte — wie ein Dropdown\n\nBei GenAI ist Halluzination das Risiko, bei Predictive FM die Vorhersagegenauigkeit. SAPs Predictive FM heisst RPT-1 und arbeitet direkt mit tabellarischen Geschaeftsdaten — Details und BW-Analogie in Kapitel 14." },
+      { heading: "Warum das wichtig ist", text: "Wenn ein Kunde \"AI einsetzen\" will: Braucht er ML, oder reichen Regeln? Braucht er ein LLM fuer Text, oder ein Bildmodell? Fuer tabellarische SAP-Daten sind klassische ML-Verfahren oft besser als Foundation Models." },
+    ],
+    takeaway: "AI ist der Oberbegriff, ML lernt aus Daten, Deep Learning nutzt neuronale Netze. Foundation Models teilen sich in GenAI (erzeugt neue Inhalte: LLM, IMG, AUD, VID) und Predictive FM (sagt Werte vorher: RPT-1). Die Grenze ist fliessend — mechanisch generieren beide.",
+    links: [
+      { label: "SAP AI Core", url: "https://help.sap.com/docs/sap-ai-core" },
+      { label: "SAP HANA PAL", url: "https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-predictive-analysis-library" },
+	  { label: "RPT-1 vs classical ML", url: "https://community.sap.com/t5/technology-blog-posts-by-members/sap-rpt-1-context-model-vs-training-classical-models-the-models-battle/ba-p/14268507" },
+	  
+    ],
+  },
+  3: {
+    title: "Was ist ein LLM?",
+    intro: "Ein Large Language Model ist ein neuronales Netz, das auf riesigen Textmengen trainiert wurde.",
+    sections: [
+      { heading: "Kernprinzip: Next Token Prediction", text: "Ein LLM sagt das nächste wahrscheinlichste Token vorher — immer und immer wieder." },
+      { heading: "Training", text: "Pre-Training auf Milliarden Dokumenten, dann Fine-Tuning (RLHF) für hilfreiche Antworten." },
+      { heading: "Parameter", text: "Klein: 7-13B. Mittel: 30-70B. Groß: 100B+. Größe beeinflusst Qualität, Kosten und Geschwindigkeit." },
+      { heading: "Inference", text: "Das Modell generiert Token für Token eine Antwort — daher erscheint sie Wort für Wort." },
+      { heading: "Temperature", text: "Temperature 0 = vorhersagbar. Temperature 1+ = kreativer, aber fehleranfälliger." },
+    ],
+    takeaway: "Ein LLM ist eine Textvorhersagemaschine. Qualität kommt aus Trainingsdaten, Parametern und Human Feedback.",
+    links: [
+      { label: "Anthropic Research", url: "https://www.anthropic.com/research" },
+      { label: "SAP Generative AI Hub", url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core" },
+    ],
+  },
+  4: {
+    title: "Was ist ein Token?",
+    intro: "Tokens sind die Grundbausteine, in die ein LLM Text zerlegt.",
+    video: "OjrGu0L5K7M",
+    sections: [
+      { heading: "Tokenisierung", text: "\"Kontextfenster\" wird z.B. zu [\"Kontext\", \"fen\", \"ster\"] — drei Tokens." },
+      { heading: "Faustregel", text: "1 Token ~ 4 Zeichen ~ 3/4 Wort (Englisch). Deutsche Texte verbrauchen 20-40% mehr Tokens." },
+      { heading: "Warum wichtig", text: "Tokens bestimmen Kosten, Geschwindigkeit und Kapazität (Kontextfenster)." },
+      { heading: "Mehrsprachigkeit", text: "Tokenizer sind auf Englisch optimiert. Deutsche Texte verbrauchen mehr Tokens." },
+    ],
+    takeaway: "Tokens sind die Währung der LLM-Welt.",
+    links: [
+      { label: "OpenAI Tokenizer", url: "https://platform.openai.com/tokenizer" },
+      { label: "Anthropic Pricing", url: "https://www.anthropic.com/pricing" },
+    ],
+  },
+    5: {
+    title: "Kontextfenster",
+    intro: "Das Kontextfenster ist die maximale Menge an Text, die ein LLM gleichzeitig \"sehen\" kann — Input und Output zusammen. Es ist der Arbeitsspeicher des Modells.",
+    sections: [
+      { heading: "Was ist das Kontextfenster?", text: "Stell dir das Kontextfenster wie einen Schreibtisch vor. Alles was drauf liegt, kann das Modell berücksichtigen. Was nicht drauf passt, existiert nicht. Input (Frage, Dokumente, System Prompt) und Output (Antwort) teilen sich diesen Platz.",
+        infobox: { title: "BW-Analogie: DTP-Datenpakete", text: "In jeder BW-Transformation — egal ob Start-, End- oder Expertenroutine — sieht man immer nur die Sätze im aktuellen DTP-Datenpaket. Was im vorherigen Paket verarbeitet wurde, ist weg. Was im nächsten kommt, ist noch nicht da.\n\nGenau so funktioniert das Kontextfenster: Was drin ist, existiert für das Modell. Was nicht drin ist — vorherige Konversationen, nicht mitgegebene Dokumente — existiert nicht. Die Paketgröße im DTP entspricht der Kontextfenstergröße des Modells." }
+      },
+      { heading: "Größenordnungen (2026)", text: "Aktuelle Kontextfenster-Groessen:\n* Claude (Anthropic): bis 200.000 Tokens (~500 Seiten)\n* GPT-4o (OpenAI): bis 128.000 Tokens\n* Gemini (Google): bis 2 Mio. Tokens\n\nZum Vergleich: Ein durchschnittliches Buch hat ca. 100.000 Tokens — Claude kann ein ganzes Buch in einer Anfrage verarbeiten." },
+      { heading: "Kontextfenster ≠ Gedächtnis", text: "Das Kontextfenster ist kein Langzeitgedächtnis. Nach jeder Session wird es geleert. Was vorher besprochen wurde, ist nicht mehr verfügbar — es sei denn, es wird explizit wieder eingefügt. Manche Anbieter simulieren Gedächtnis durch automatische Zusammenfassungen." },
+      { heading: "Praktische Bedeutung für SAP", text: "Kann ich ein ganzes ABAP-Programm analysieren lassen? Passt die Datasphere-Dokumentation in den Kontext? Wie viele Tabellenzeilen kann ich übergeben? Die Antwort hängt direkt von der Kontextfenstergröße und dem Token-Verbrauch ab." },
+    ],
+    takeaway: "Das Kontextfenster ist der Arbeitsspeicher des LLMs — nicht sein Langzeitgedächtnis. Für Enterprise-Anwendungen ist ein großes Kontextfenster ein echter Vorteil.",
+    links: [{ label: "Claude Model Card", url: "https://docs.anthropic.com/en/docs/about-claude/models" }],
+  },
+  6: {
+    title: "Modellauswahl",
+    intro: "Nicht jedes Problem braucht das größte Modell. Die richtige Wahl hängt von Aufgabe, Budget, Datenschutz und Geschwindigkeit ab.",
+    sections: [
+      { heading: "Open Source vs. Closed Source", text: "Closed Source (Claude, GPT-4, Gemini): Besser bei komplexem Reasoning, regelmäßig aktualisiert, aber Daten gehen an den Anbieter. Open Source (Llama, Mistral, Qwen): Lokal betreibbar, volle Datenkontrolle, aber oft schwächer. Für SAP-Kunden mit strengem Datenschutz kann Open Source die einzige Option sein." },
+      { heading: "Modellgrößen und Trade-offs", text: "Klein (7-13B): Schnell, günstig, gut für Klassifizierung. Mittel (30-70B): Guter Kompromiss. Groß (100B+): Beste Qualität bei Reasoning und Code, aber teurer und langsamer." },
+      { heading: "Token-basierte Abrechnung", text: "API-Modelle rechnen pro Token ab. Input günstiger als Output (Faktor 3-5x). Eine 100-Seiten-Analyse kostet Cent — aber tausende Aufrufe pro Tag summieren sich. SAP AI Core unterstützt mehrere Anbieter über den Generative AI Hub." },
+      { heading: "Entscheidungsmatrix", text: "Dürfen Daten raus? Nein → Open Source. Wie komplex? Einfach → kleines Modell. Wie viele Anfragen? Tausende → kleines/mittleres Modell wirtschaftlicher." },
+    ],
+    takeaway: "Modellwahl = Qualität × Kosten × Datenschutz. SAP AI Core ermöglicht Zugriff auf verschiedene Modelle über eine Schnittstelle.",
+    links: [
+      { label: "Anthropic Pricing", url: "https://www.anthropic.com/pricing" },
+      { label: "SAP Generative AI Hub", url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core" },
+      { label: "Chatbot Arena — Live Rankings", url: "https://lmarena.ai/" },
+    ],
+  },
+  7: {
+    title: "Prompt Engineering",
+    intro: "Die Qualität der AI-Antwort hängt entscheidend von der Frage ab. Prompt Engineering ist die Methodik, Anfragen so zu formulieren, dass das Modell die bestmögliche Antwort liefert.",
+    sections: [
+      { heading: "Warum es wichtig ist", text: "\"Erkläre mir SAP\" liefert eine generische Antwort. \"Erkläre einem mittelständischen CFO ohne SAP-Erfahrung in 3 Absätzen, warum S/4HANA gegenüber dem Legacy-ERP Vorteile bietet. Fokus: TCO, Echtzeit-Reporting, Cloud-Readiness\" liefert eine deutlich bessere." },
+      { heading: "Grundprinzipien", text: "1) Sei spezifisch — definiere Zielgruppe, Länge, Fokus. 2) Gib Kontext. 3) Definiere das Format (Tabelle, JSON, Fließtext). 4) Nutze Beispiele (Few-Shot). 5) Fordere schrittweises Denken (Chain-of-Thought) — verbessert Qualität bei komplexen Aufgaben messbar.",
+        infobox: { title: "ABAP-Analogie: SELECT Statement", text: "Ein SELECT * FROM bseg liefert dir alles — Millionen Sätze, unstrukturiert, langsam, teuer. Ein präzises SELECT bukrs belnr gjahr FROM bseg WHERE bukrs = '1000' AND gjahr = '2026' ORDER BY belnr liefert exakt das, was du brauchst.\n\nGenauso bei Prompts: \"Erkläre SAP\" = SELECT *. \"Erkläre einem CFO ohne SAP-Erfahrung in 3 Absätzen die Vorteile von S/4HANA, Fokus: TCO und Echtzeit-Reporting\" = präzises SELECT mit WHERE-Klausel." }
+      },
+      { heading: "Rollen und Perspektiven", text: "\"Du bist ein SAP FI/CO-Berater mit 15 Jahren Erfahrung\" — hilft dem Modell beim richtigen Detailgrad. Perspektiven kombinieren: \"Analysiere erst aus Berater-Sicht, dann aus Sicht des IT-Leiters.\"" },
+      { heading: "Iteratives Prompting", text: "Die erste Antwort ist selten perfekt. Prompt Engineering ist iterativ: Anfrage → Bewerten → Verfeinern → Erneut fragen. Speichere gute Prompts als Templates — was bei einem Kunden funktioniert, funktioniert oft beim nächsten." },
+    ],
+    takeaway: "Gute Prompts sind spezifisch, kontextreich und formatiert. Baue dir eine Prompt-Bibliothek auf.",
+    links: [
+      { label: "Anthropic Prompt Engineering Guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" },
+      { label: "OpenAI Prompt Engineering", url: "https://platform.openai.com/docs/guides/prompt-engineering" },
+    ],
+  },
+  8: {
+    title: "System Prompts",
+    intro: "Ein System Prompt definiert dauerhaft, wer die AI ist und wie sie sich verhalten soll — über viele Anfragen hinweg. Die Stellenbeschreibung statt der einzelnen Anweisung.",
+    sections: [
+      { heading: "Was ist ein System Prompt?", text: "Eine Vorab-Instruktion, die bei jeder Anfrage mitgeschickt wird. Er definiert Rolle, Ton, Fachgebiet, Einschränkungen und Format. Der User sieht ihn in der Regel nicht — er arbeitet im Hintergrund.",
+        infobox: { title: "BW-Analogie: RSADMIN-Parameter", text: "RSADMIN-Einträge sind versteckte Konfigurationsparameter, die das Verhalten des gesamten BW-Systems steuern. Man setzt sie einmal über SE16 auf der Tabelle RSADMIN, kein Endanwender weiß davon — aber sie beeinflussen jede Query-Ausführung, jeden DTP-Lauf, jede Transformation.\n\nEin System Prompt funktioniert genauso: Du definierst einmal das Verhalten der AI, der Endanwender sieht ihn nicht, aber jede Antwort wird davon geprägt. Unsichtbar, aber allgegenwärtig." }
+      },
+      { heading: "Unterschied zum normalen Prompt", text: "Prompt Engineering = die einzelne Frage optimieren. System Prompt = das Gesamtverhalten definieren. Der System Prompt ist die Stellenbeschreibung, der Prompt der einzelne Arbeitsauftrag." },
+      { heading: "Aufbau eines guten System Prompts", text: "\n* Rollendefinition — \"Du bist ein SAP Datasphere-Experte.\"\n* Verhaltensregeln — \"Antworte auf Deutsch. Verwende SAP-Terminologie.\"\n* Einschraenkungen — \"Sage klar, wenn du unsicher bist.\"\n* Output-Format — \"Formatiere als Tabelle.\"" },
+      { heading: "Praxisbeispiel: SAP-Berater-Bot", text: "\"Du bist ein erfahrener SAP S/4HANA-Berater bei CBS. Antworte auf Deutsch, verwende korrekte Transaktionscodes, referenziere SAP Help, formatiere ABAP-Code in Code-Blöcken, und sage explizit wenn du unsicher bist.\"" },
+      { heading: "Vorstufe zu Skills", text: "System Prompts sind der erste Schritt zu reproduzierbarer Qualität. Kombiniert man sie mit Tool-Zugriff (MCP) und Domänenwissen, entsteht ein Skill — die nächste Stufe (Kapitel ⑮)." },
+    ],
+    takeaway: "System Prompts = konsistente AI-Qualität. Stellenbeschreibung statt Einzelanweisung. Vorstufe von Skills.",
+    links: [{ label: "Anthropic: System Prompts Best Practices", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts" }],
+  },
+  9: {
+    title: "Was ist ein Agent?",
+    intro: "Ein AI Agent ist ein System, das nicht nur antwortet, sondern selbstständig Aufgaben plant, Werkzeuge nutzt und Entscheidungen trifft. Der Unterschied: Ein Agent handelt.",
+    sections: [
+      { heading: "Chatbot vs. Agent", text: "Ein Chatbot ist reaktiv: Er beantwortet Fragen. Ein Agent ist proaktiv: Er zerlegt Aufgaben in Schritte, wählt Werkzeuge, führt Aktionen aus, prüft Ergebnisse und korrigiert sich. \"Analysiere unsere letzten 5 SAP-Projekte auf Budgetüberschreitungen\" — ein Agent sucht die Daten, strukturiert, analysiert und berichtet eigenständig." },
+      { heading: "Werkzeuge (Tools)", text: "Was Agents mächtig macht: Zugriff auf Web-Suche, Datenbanken, API-Calls (z.B. SAP-APIs), Code-Ausführung, Dateisysteme, E-Mail. Tools erweitern Fähigkeiten weit über Textverständnis hinaus." },
+      { heading: "Der Agent-Loop", text: "\n* Aufgabe empfangen und verstehen\n* Plan erstellen — welche Schritte, welche Tools?\n* Tool aufrufen, Ergebnis auswerten\n* Entscheiden: Fertig oder naechster Schritt?\n* Ergebnis liefern\n\nDiese Schleife wiederholt sich — der Agent denkt iterativ.",
+        infobox: { title: "BW-Analogie: Dynamische Process Chain", text: "Eine BEx-Query ist wie ein Chatbot — sie beantwortet eine einzelne Frage. Eine Process Chain ist wie ein Agent — sie führt mehrere Schritte nacheinander aus, prüft Ergebnisse (grün/rot) und nimmt bei Fehlern alternative Pfade.\n\nDer wesentliche Unterschied: In einer Process Chain sind die Kettenglieder im Designer vordefiniert. Ein Agent bestimmt den nächsten Schritt zur Laufzeit basierend auf dem Ergebnis des aktuellen Schritts. Stellt euch eine Process Chain vor, bei der die nächsten Kettenglieder nicht im Designer festgelegt sind, sondern dynamisch entschieden werden." }
+      },
+      { heading: "SAP-Kontext: Joule", text: "SAP Joule ist SAPs AI Agent. Er führt Transaktionen aus, fragt Daten ab und automatisiert Prozesse via natürliche Sprache. Joule Studio 2.0 (Sapphire 2026) ermöglicht eigene Skills und Agents. Joule nutzt intern MCP für den Knowledge Graph." },
+      { heading: "Multi-Agent-Systeme", text: "Nächste Stufe: Spezialisierte Agents arbeiten zusammen. Ein Finanz-Agent für FI/CO, ein Procurement-Agent für MM/Ariba, ein Orchestrator koordiniert. Dafür braucht man A2A (Kapitel ⑬)." },
+    ],
+    takeaway: "Agenten: Von AI die antwortet zu AI die handelt. Tools und iteratives Arbeiten sind der Schlüssel. Joule ist SAPs Umsetzung.",
+    links: [
+      { label: "SAP Joule (SAP Help)", url: "https://help.sap.com/docs/joule" },
+      { label: "Anthropic: Building Agents", url: "https://docs.anthropic.com/en/docs/build-with-claude/agentic" },
+    ],
+  },
+  10: {
+    title: "Halluzinationen & Grenzen",
+    intro: "LLMs erzeugen manchmal überzeugend klingende, aber falsche Aussagen. Das sind keine Bugs, sondern Eigenschaften der Architektur — und der wichtigste Grund, AI-Ergebnisse immer zu prüfen.",
+    sections: [
+      { heading: "Was sind Halluzinationen?", text: "LLMs generieren statistisch plausible Fortsetzungen — sie \"wissen\" nicht, ob etwas wahr ist. Ohne klare Trainingsdaten erfindet das Modell. Typisch: Erfundene Quellen, nicht existierende SAP-Transaktionscodes, falsche Zahlen mit überzeugender Genauigkeit." },
+      { heading: "Wann passiert es?", text: "Nischenthemen (spezielle SAP-Customizing-Fragen). Aktuelle Ereignisse nach dem Trainings-Cutoff. Spezifische Zahlen und Referenzen. Wenn das Modell gezwungen wird zu antworten statt \"Ich weiß es nicht\" zu sagen." },
+      { heading: "Gegenmaßnahmen", text: "RAG — externe Daten als Kontext (Kapitel ⑫). Grounding — Antworten in Quellen verankern. Klare Prompts: \"Sage wenn du unsicher bist.\" Niedrige Temperature für Fakten. Kritische Ergebnisse immer verifizieren — besonders Zahlen und Transaktionscodes." },
+      { heading: "Weitere Grenzen", text: "Kein echtes Verständnis — Muster, kein Denken. Kein Zugang zu aktuellen Daten ohne Tools. Keine Mathematik-Garantie. Kein Langzeitgedächtnis. Bias aus Trainingsdaten." },
+    ],
+    takeaway: "Halluzinationen sind der Preis für Kreativität. Für produktiven Einsatz: RAG, Grounding und Verifikation. Vertraue, aber prüfe.",
+    links: [{ label: "Anthropic: Reducing Hallucinations", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/reduce-hallucinations" }],
+  },
+  12: {
+    title: "Responsible AI",
+    intro: "Mit dem EU AI Act wird verantwortungsvoller AI-Einsatz zum Pflichtthema. Für SAP-Berater ist Wissen um Regulierung und Ethik keine Kür, sondern Pflicht.",
+    sections: [
+      { heading: "EU AI Act", text: "Seit 2024 in Kraft. Risikostufen:\n* Minimal Risk (Chatbots) — Kennzeichnungspflicht\n* Limited Risk (Content-Generierung) — Transparenzpflicht\n* High Risk (HR-Entscheidungen, Kredit) — Konformitaetsbewertung, Dokumentation, menschliche Aufsicht\n* Unacceptable Risk (Social Scoring) — verboten\n\n SAP-relevante AI-Prozesse können als High Risk eingestuft werden." },
+      { heading: "Datenschutz: DSGVO meets AI", text: "Kernfragen: Welche Daten dürfen an ein LLM? Wo werden sie verarbeitet — EU oder USA? Werden Daten zum Training verwendet? Gibt es eine Auftragsverarbeitung? Für SAP-Kunden mit Personal- oder Finanzdaten ein Showstopper.",
+        infobox: { title: "BW-Analogie: Analyseberechtigungen", text: "Im BW definierst du über Analyseberechtigungen (RSECADMIN), welcher Benutzer welche Datenkombinationen sehen darf. Buchungskreis 1000 ja, 2000 nein. Kostenstellengruppe PROD ja, HR nein. Der Benutzer sieht den gleichen Bericht, aber je nach Berechtigung unterschiedliche Daten.\n\nBei Responsible AI gilt dasselbe Prinzip: Welche Daten dürfen an welches Modell? Welcher Benutzer darf welche AI-Funktionen nutzen? Wer darf sensible Daten im Prompt verwenden? Die Mechanik ist anders, das Konzept ist identisch: Datenzugriff kontrollieren." }
+      },
+      { heading: "SAPs Ansatz", text: "\"Responsible AI by Design\" — eingebaute Governance, Audit-Trails, Kontrolle. SAP AI Core verarbeitet Daten in der Hyperscaler-Region des Kunden. Joule nutzt keine Kundendaten zum Training. Das ist ein Verkaufsargument für compliance-sensitive Kunden." },
+      { heading: "Bias und Fairness", text: "LLMs übernehmen Vorurteile aus Trainingsdaten. Ein AI-Recruiting-Tool könnte bestehende Diskriminierung fortschreiben. Gegenmaßnahmen: Diverse Daten, Bias-Audits, menschliche Aufsicht bei kritischen Entscheidungen." },
+    ],
+    takeaway: "Responsible AI ist regulatorische Anforderung (EU AI Act). SAP-Berater müssen Datenschutz, Risikoklassen und Bias kennen.",
+    links: [
+      { label: "EU AI Act", url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+      { label: "SAP Responsible AI", url: "https://www.sap.com/products/artificial-intelligence/responsible-ai.html" },
+    ],
+  },
+  13: {
+    title: "RAG — Retrieval Augmented Generation",
+    intro: "RAG löst eines der größten LLM-Probleme: fehlender Zugang zu aktuellen oder firmenspezifischen Daten. Statt das Modell neu zu trainieren, liefert man relevante Dokumente zur Laufzeit.",
+    video: "UabBYexBD4k",
+    sections: [
+      { heading: "Das Problem", text: "Ein LLM kennt nur Trainingsdaten — nichts über eure SAP-Konfiguration oder Kundenverträge. Zwei Wege: Fine-Tuning (teuer, veraltet schnell) oder RAG (flexibel, aktuell, kosteneffizient). RAG ist der Enterprise-Standard.",
+        infobox: { title: "BW-Analogie: SDA mit HCPR auf Open ODS View", text: "Fine-Tuning = Vollständige Replikation via DTP in ein ADSO. Die Daten sind dauerhaft im BW, immer verfügbar, müssen aber aktiv aktualisiert werden wenn sich die Quelle ändert. Die Daten sind eingebacken.\n\nRAG = SDA-Zugriff mit HCPR auf einen Open ODS View. Die Daten bleiben im Quellsystem. Zur Query-Laufzeit werden die relevanten Sätze über den virtuellen View geholt, stehen temporär im HANA-Speicher zur Verfügung, und sind nach der Query wieder weg — nicht persistiert, nicht repliziert.\n\nDer Open ODS View passt besonders gut: Er ist eine virtuelle, schemafreie Sicht auf externe Daten — genau wie RAG eine virtuelle Sicht auf die Vektordatenbank ist. HCPR holt die Daten temporär in den HANA-Speicher, so wie RAG die Chunks temporär ins Kontextfenster lädt." }
+      },
+      { heading: "Wie RAG funktioniert", text: "\n* Dokumente in Chunks zerlegen und als Vektoren (Embeddings) speichern\n* Nutzerfrage ebenfalls vektorisieren\n* Aehnlichste Chunks aus der Vektordatenbank abrufen\n* Chunks als Kontext an den LLM-Prompt anhaengen\n* LLM antwortet auf Basis des gelieferten Kontexts" },
+      { heading: "Embeddings und Vektordatenbanken", text: "Embeddings sind numerische Darstellungen von Text — semantisch ähnliche Texte liegen nahe beieinander. SAP HANA Cloud hat seit 2024 native Vector Engine Support — RAG direkt auf bestehender HANA-Infrastruktur." },
+      { heading: "SAP-Kontext: Grounding", text: "SAP AI Core bietet Grounding für Joule. Datasphere und BDC als Datenquellen. Der Knowledge Graph liefert Kontext über Geschäftsobjekte. Wichtig: SAPs Grounding ist technisch eine RAG-Pipeline." },
+      { heading: "Herausforderungen", text: "Chunking-Strategie (zu klein = kein Kontext, zu groß = Token-Verschwendung). Datenqualität (Garbage In, Garbage Out). Aktualität (Vektordatenbank muss aktualisiert werden). Halluzination trotz RAG möglich." },
+    ],
+    takeaway: "RAG ist die pragmatische Enterprise-Lösung. SAP HANA Cloud bietet native Vector-Unterstützung. Qualität hängt an Chunking und Datenqualität.",
+    links: [
+      { label: "SAP AI Core — Grounding", url: "https://help.sap.com/docs/sap-ai-core" },
+      { label: "SAP HANA Cloud Vector Engine", url: "https://help.sap.com/docs/hana-cloud-database" },
+    ],
+  },
+  14: {
+    title: "Tabular Foundation Models — SAP RPT-1",
+    intro: "Waehrend LLMs das naechste Wort in einem Text vorhersagen, prognostiziert RPT-1 das naechste Feld in einer Tabellenzeile. Es ist SAPs Foundation Model fuer strukturierte Geschaeftsdaten — und direkt relevant fuer jeden, der mit tabellarischen SAP-Daten arbeitet.",
+    sections: [
+      { heading: "Was ist ein Tabular Foundation Model?", text: "LLMs verstehen Text. Aber die meisten SAP-Daten sind keine Texte, sondern Tabellen — Buchungen, Bestellungen, Lieferscheine, Zeiterfassungen. Ein Tabular Foundation Model (TFM) ist ein vortrainiertes Modell, das speziell fuer diese Art von strukturierten Daten entwickelt wurde.\n\nSAPs RPT-1 (Relational Pre-Trained Transformer, ausgesprochen \"rapid one\") ist genau das: Ein Transformer, der auf relationalen Geschaeftsdaten trainiert wurde und Geschaeftsergebnisse vorhersagt." },
+      { heading: "Next Field Prediction vs. Next Token Prediction", text: "Das Kernprinzip ist analog zu LLMs, aber fuer Tabellen:\n* LLM: Gegeben ein Text, sage das naechste Token vorher\n* RPT-1: Gegeben eine Tabellenzeile, sage den naechsten Feldwert vorher\n\nBeispiel: Gegeben Kunde, Bestellhistorie, Branche und Region — wie hoch ist die Wahrscheinlichkeit einer verspaeteten Zahlung?" },
+      { heading: "RPT-1 vs. klassisches ML", text: "Beide lernen aus Daten und machen Vorhersagen. Der Unterschied liegt im Wie:\n\nKlassisches ML:\n* Ein separates Modell pro Aufgabe (Churn, Zahlungsverzug, Lieferantenrisiko)\n* Jedes braucht eigene Trainingsdaten und Feature Engineering\n* Wochen bis Monate pro Modell\n* Braucht Data Scientists\n\nRPT-1:\n* Ein vortrainiertes Modell fuer viele Aufgaben\n* In-Context Learning — Kontext mitgeben statt neu trainieren\n* Ein API-Call statt einer Trainingspipeline\n* Deutlich schneller einsetzbar",
+        infobox: { title: "BW-Analogie: InfoProvider pro Analyse vs. CompositeProvider", text: "Klassisches ML ist wie fuer jede Analyse einen eigenen InfoProvider mit eigener Transformation und eigener Process Chain zu bauen. Jeder Use Case braucht sein eigenes Setup — aufwendig, redundant, schwer zu warten.\n\nRPT-1 ist wie ein CompositeProvider, der viele verschiedene Queries mit einem einzigen Modell bedient. Einmal aufgesetzt, flexibel nutzbar, weniger Wartungsaufwand." }
+      },
+      { heading: "Konkrete SAP Use Cases", text: "\n* Zahlungsverzoegerungen — Wann wird eine Rechnung bezahlt?\n* Lieferantenrisiko — Wie zuverlaessig ist ein Lieferant?\n* Kundenabwanderung — Welche Kunden sind abwanderungsgefaehrdet?\n* Upsell-Chancen — Welche Kunden kaufen wahrscheinlich mehr?\n* Bedarfsprognose — Wie viel wird naechsten Monat bestellt?" },
+      { heading: "Drei Varianten", text: "\n* RPT-1 Small — optimiert auf Geschwindigkeit, gut fuer Echtzeit-Szenarien\n* RPT-1 Large — optimiert auf Genauigkeit, besser fuer komplexe Vorhersagen\n* RPT-1 OSS — Open Source auf HuggingFace, fuer eigene Infrastruktur\n\nAlle verfuegbar ueber den SAP Generative AI Hub seit Q4 2025. RPT-1.5 ist fuer Ende September 2026 angekuendigt." },
+      { heading: "Abgrenzung zu SAP HANA PAL/APL", text: "SAP HANA bietet mit PAL (Predictive Analysis Library) und APL (Automated Predictive Library) bereits ML-Funktionen direkt in der Datenbank. Der Unterschied:\n* PAL/APL = klassisches ML, ein Modell pro Aufgabe, laeuft direkt in HANA\n* RPT-1 = Foundation Model, ein Modell fuer viele Aufgaben, laeuft in SAP AI Core\n\nPAL/APL bleibt relevant fuer Szenarien, die direkt in der Datenbank laufen muessen. RPT-1 ist die bessere Wahl, wenn Flexibilitaet und schnelle Bereitstellung wichtiger sind." },
+    ],
+    takeaway: "RPT-1 macht fuer tabellarische Daten, was LLMs fuer Text gemacht haben: Ein vortrainiertes Modell ersetzt viele spezialisierte Einzelmodelle. Fuer SAP-Berater besonders relevant, weil es direkt mit den strukturierten Daten arbeitet, die ihr taeglich in BW seht.",
+    links: [
+      { label: "SAP RPT-1 (Techzine)", url: "https://www.techzine.eu/news/analytics/131498/sap-launches-rpt-1-the-end-of-machine-learning/" },
+      { label: "SAP Generative AI Hub", url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core" },
+      { label: "SAP HANA PAL", url: "https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-predictive-analysis-library" },
+      { label: "RPT-1 vs Classical ML — The Models Battle (SAP Community)", url: "https://community.sap.com/t5/technology-blog-posts-by-members/sap-rpt-1-context-model-vs-training-classical-models-the-models-battle/ba-p/14268507" },
+      { label: "RPT-1 OSS (HuggingFace)", url: "https://huggingface.co/SAP" },
+    ],
+  },
+  15: {
+    diagram: "mcp-a2a",
+    title: "MCP vs. A2A — Agent-Protokolle",
+    intro: "Die Enterprise-AI-Landschaft konvergiert auf zwei komplementäre Protokolle: MCP für Agent ↔ Tools (vertikal) und A2A für Agent ↔ Agent (horizontal).",
+    sections: [
+      { heading: "MCP — Model Context Protocol", text: "Von Anthropic als Open-Source-Standard. Verbindet einen Agent mit externen Tools, Datenbanken und APIs. USB-C für AI — ein standardisierter Stecker. 97+ Mio. Downloads. Ein MCP-Server exponiert Tools (aufrufbare Funktionen) und Resources (lesbare Daten). Der Agent entscheidet selbst, wann und welches Tool er nutzt.", video: "TjvT9sI5mLE" },
+      { heading: "Tool Calling vs. MCP — Was ist der Unterschied?", text: "Tool Calling (Function Calling) ist eine Fähigkeit des LLMs selbst: Du definierst Funktionen im API-Call, das LLM entscheidet ob es sie aufruft und gibt strukturierten JSON-Output zurück. Einfach, schnell, volle Kontrolle — aber fest verdrahtet in deiner Anwendung, gebunden an einen LLM-Anbieter. MCP ist die Protokollschicht darüber: Tools werden standardisiert exponiert, dynamisch entdeckt und können von jedem MCP-fähigen Client genutzt werden. Tool Calling reicht für eine App mit bekannten Tools. MCP lohnt sich, wenn Tools wiederverwendbar sein sollen — über verschiedene Clients, LLMs und Teams hinweg.",
+        infobox: { title: "ABAP-Analogie für BW-Berater", text: "Tool Calling = ABAP-Code direkt in einer BW-Transformation (Start-/End-/Expertenroutine). Es funktioniert, es ist schnell — aber die Logik ist an diese eine Transformation gebunden. Brauchst du sie woanders, kopierst du den Code.\n\nMCP = Eine Methode in einer ABAP-Klasse (SE24). Saubere Importing-/Exporting-Parameter, jede Transformation und jeder Report kann sie aufrufen. Änderst du die Implementierung, profitieren alle Aufrufer.\n\nWeitergedacht: Der MCP-Server ist wie ein ABAP Interface (IF_...) — er definiert den Vertrag. Verschiedene Klassen können das gleiche Interface bedienen, genau wie verschiedene MCP-Server das gleiche Protokoll sprechen." }
+      },
+      { heading: "A2A — Agent-to-Agent Protocol", text: "Von Google initiiert (April 2025), jetzt unter der Linux Foundation (AAIF) — mitgegründet von OpenAI, Anthropic, Google, Microsoft, AWS. A2A ermöglicht Agents, einander zu entdecken, Aufgaben zu delegieren und koordiniert zusammenzuarbeiten. v1.2 seit März 2026, 150+ Organisationen.", video: "BMDFPOyezH4" },
+      { heading: "MCP + A2A = Komplett", text: "MCP ist vertikal: Agent greift auf Werkzeuge zu. A2A ist horizontal: Agents reden miteinander. Beispiel: Ein SAP-Joule-Agent (via A2A kontaktiert) nutzt intern MCP für den Knowledge Graph, führt eine Abfrage aus, liefert das Ergebnis via A2A zurück." },
+      { heading: "SAPs Dual-MCP-Strategie", text: "Intern nutzt Joule MCP für Knowledge Graph, Semantik und Ontologien — tief integriert, nicht exponiert. Extern plant die Integration Suite ein MCP Gateway (Q2 2026) für APIs als MCP-Server. Aber: Die offizielle Empfehlung ist A2A via Agent Gateway für externen Zugriff, nicht direkt MCP.", sectionLinks: [
+        { label: "Mario Defelipe: SAP has two MCPs", url: "https://medium.com/@mario.defelipe/sap-has-two-mcps-one-you-cant-use-one-you-shouldn-t-445ce6e409b9" },
+        { label: "SAP: A2A vs. MCP Reference Architecture", url: "https://architecture.learning.sap.com/docs/ref-arch/ca1d2a3e/1" },
+      ]},
+      { heading: "Praxisbeispiel: BW/4HANA MCP Server", text: "David Nicolay hat einen MCP Server für BW/4HANA-Modellierung entwickelt. Wichtig: SAP hat am 27.04.2026 die REST API-Nutzung dafür in den Nutzungsbedingungen untersagt — ein Beispiel, wie schnell sich die Compliance-Landschaft ändert.", sectionLinks: [
+        { label: "GitHub: dnic-dev/bw-modeling-mcp", url: "https://github.com/dnic-dev/bw-modeling-mcp" },
+        { label: "David Nicolay — BW MCP Server (LinkedIn)", url: "https://www.linkedin.com/posts/david-nicolay-420a9327a_sapbw-mcp-aiagents-ugcPost-7457448447609028608-SpqS" },
+      ]},
+    ],
+    takeaway: "MCP für Tool-Zugriff (vertikal), A2A für Agent-Koordination (horizontal). SAP nutzt beides — MCP intern, A2A extern. Compliance bewegt sich schnell.",
+    links: [
+      { label: "Model Context Protocol", url: "https://modelcontextprotocol.io" },
+      { label: "A2A Protocol", url: "https://google.github.io/A2A/" },
+      { label: "SAP AI Golden Path", url: "https://architecture.learning.sap.com/docs/aigp" },
+    ],
+  },
+  16: {
+    title: "SAP Business AI Platform",
+    intro: "Bei Sapphire 2026 vorgestellt: BTP + Business Data Cloud + SAP Business AI = eine integrierte Plattform als Grundlage für die \"Autonomous Enterprise\" Vision.",
+    sections: [
+      { heading: "Drei werden Eins", text: "SAP hat BTP, BDC und SAP Business AI zusammengeführt. Ein Lizenzmodell, eine Verwaltung, eine Datenschicht. Statt drei separater Welten mit eigenen Berechtigungen und Integrationsaufwänden." },
+      { heading: "Joule als AI-Orchestrator", text: "Joule ist nicht mehr nur Chatbot, sondern das zentrale AI-Gateway. Joule Studio 2.0: eigene Skills und Agents mit Low-Code in SAP Build. Intern MCP für SAP-Dienste, extern A2A via Agent Gateway." },
+      { heading: "Knowledge Graph — SAPs Burggraben", text: "Verbindet Geschäftsobjekte, Prozesse und Semantik über alle Module. Er weiß, dass ein Kundenauftrag in SD mit einem WBS in PS verknüpft ist, der Kostenstellen in CO betrifft. Dieses Wissen unterscheidet SAP von generischen Plattformen. Nur über Joule via A2A erreichbar." },
+      { heading: "North Star Architecture", text: "Die Ziel-Vision: AI als Intelligenzschicht über deterministische Systeme. Keine Roadmap, sondern Richtung. Deterministische Prozesse bleiben deterministisch. AI optimiert, empfiehlt, automatisiert — ohne Datenintegrität zu gefährden." },
+      { heading: "AI Golden Path & Decision Tree", text: "Praktische Orientierungshilfen: Welche AI-Technologie für welchen Use Case? Brauche ich Joule, Custom Agent, RAG, Fine-Tuning oder klassisches ML? Wertvolles Werkzeug für Kundenberatung." },
+    ],
+    takeaway: "SAPs Burggraben liegt im Knowledge Graph und der Prozesskenntnis — nicht im LLM selbst. Die Plattform-Konsolidierung vereinfacht die Enterprise-AI-Landschaft.",
+    links: [
+      { label: "SAP North Star Architecture", url: "https://architecture.learning.sap.com/docs/ai-native-north-star-architecture" },
+      { label: "SAP AI Golden Path", url: "https://architecture.learning.sap.com/docs/ai-golden-path" },
+      { label: "AI Decision Tree", url: "https://architecture.learning.sap.com/docs/golden-path/ai-golden-path/technology-overview" },
+      { label: "Sapphire 2026 Announcements", url: "https://community.sap.com/t5/technology-blog-posts-by-sap/sap-sapphire-2026-announcements-only/ba-p/14396190" },
+      { label: "A2A vs. MCP — SAP Reference Architecture", url: "https://architecture.learning.sap.com/docs/ref-arch/ca1d2a3e/1" },
+    ],
+  },
+  17: {
+    title: "Skills — Reproduzierbare AI-Kompetenz",
+    intro: "Skills kombinieren System Prompt, Tool-Zugriff und Domänenwissen zu einem reproduzierbaren Paket. Sie machen Agents konsistent gut in einer bestimmten Aufgabe.",
+    sections: [
+      { heading: "Was ist ein Skill?", text: "Drei Elemente:\n* System Prompt mit Rolle und Regeln\n* Tool-Zugriff via MCP\n* Domaenenspezifisches Wissen (Best Practices, Doku, Beispiele)\n\nZusammen ein Paket fuer reproduzierbar gute Ergebnisse. Beispiel: Ein \"SAP Datasphere Modeling\" Skill kennt APIs, Best Practices und liefert konsistent." },
+      { heading: "Skill vs. Agent vs. Tool", text: "Tool = einzelnes Werkzeug (API-Call). Agent = System das handelt. Skill = das Wissen, wie der Agent das Tool nutzt. Analogie: Handwerker (Agent) hat Werkzeugkasten (Tools). Der Skill ist seine Ausbildung." },
+      { heading: "SAP: Joule Studio", text: "Joule Studio 2.0 ermöglicht eigene Skills mit Low-Code in SAP Build. Ein Skill definiert welche SAP-Dienste der Agent nutzen darf, welche Geschäftslogik gilt und wie er interagiert. Beispiele: Purchase Order Approval Skill, Financial Close Skill." },
+      { heading: "Skills-over-MCP", text: "Fortgeschrittenes Konzept: Der MCP-Server liefert nicht nur Tools, sondern auch Dokumentation, Best Practices und Kontextinfos. Nicht \"hier ist ein API-Endpoint\", sondern \"hier ist der Endpoint, so verwendest du ihn, das sind häufige Fehler\". Macht Agent-Ergebnisse modellunabhängig reproduzierbar gut." },
+      { heading: "Warum Skills der Schlüssel sind", text: "Enterprise braucht Reproduzierbarkeit. Skills lösen das, indem sie Domänenwissen strukturiert bereitstellen. Für SAP-Berater: Skills sind das, was ihr verkauft — nicht das Modell, sondern das Prozesswissen." },
+    ],
+    takeaway: "Skills = reproduzierbare AI-Qualität. Werkzeuge + Methodik + Domänenwissen. In SAP: Joule Studio. Generell: Skills-over-MCP liefert Methodik mit dem Tool.",
+    links: [
+      { label: "Joule Studio 2.0", url: "https://architecture.learning.sap.com/docs/ref-arch/06ff6062dc" },
+      { label: "SAP AI Golden Path", url: "https://architecture.learning.sap.com/docs/aigp" },
+      { label: "Model Context Protocol", url: "https://modelcontextprotocol.io" },
+    ],
+  },
+  11: {
+    title: "Robots.txt & Web Access",
+    intro: "AI-Agenten wie Claude nutzen Web-Zugriff, um aktuelle Informationen abzurufen. Doch nicht jede Website erlaubt das — die robots.txt-Datei bestimmt, welche Bots zugreifen duerfen und welche nicht. Fuer SAP-Berater ist das ein ganz konkretes Problem.",
+    sections: [
+      { heading: "Was ist robots.txt?", text: "Jede Website kann eine robots.txt-Datei im Stammverzeichnis ablegen (z.B. example.com/robots.txt). Sie definiert Regeln fuer Webcrawler und Bots: Welcher Bot darf auf welche Seiten zugreifen? Ein 'Disallow: /' bedeutet: Zugriff komplett verboten. Suchmaschinen-Bots wie Googlebot halten sich daran — und AI-Tools wie Claude ebenfalls." },
+      { heading: "Das SAP Help Problem", text: "help.sap.com blockiert Claude's Web-Fetch-Tool per robots.txt. Die robots.txt listet 'ClaudeBot' zwar in der Allow-Liste, aber das Fetch-Tool nutzt einen anderen User-Agent, der unter die Default-Regel 'User-agent: * / Disallow: /' faellt. Das Ergebnis: ROBOTS_DISALLOWED-Fehler bei jedem Zugriff. Auch www.sap.com ist blockiert." },
+      { heading: "Der GitHub-Workaround", text: "SAP pflegt die komplette Datasphere-Dokumentation als Markdown auf GitHub: github.com/SAP-docs/sap-datasphere. Die Dateinamen entsprechen den Help-Portal-Seiten. Beispiel: Die Help-URL mit ID 'de1ed47' findet sich als 'create-a-structure-for-an-analytic-model-de1ed47.md' auf GitHub. Claude kann GitHub-URLs problemlos abrufen.",
+        sectionLinks: [
+          { label: "SAP Datasphere Docs auf GitHub", url: "https://github.com/SAP-docs/sap-datasphere" },
+        ]
+      },
+      { heading: "Was funktioniert, was nicht", text: "Funktioniert: SAP Community (community.sap.com), GitHub SAP-docs Repos, SAP Architecture Center. Funktioniert NICHT: help.sap.com, www.sap.com, SAP What's New-Seiten (nicht auf GitHub gespiegelt). Tipp: Wenn Claude eine SAP-Help-Seite nicht laden kann, die Datei-ID aus der URL nehmen und auf GitHub suchen." },
+      { heading: "Warum das fuer SAP-Berater relevant ist", text: "Wenn ihr Claude fuer SAP-Recherche nutzt und auf 'Ich kann diese Seite nicht abrufen' stosst, liegt es meist an robots.txt. Das ist kein Fehler von Claude, sondern eine bewusste Entscheidung des Website-Betreibers. Der GitHub-Workaround fuer Datasphere-Doku ist die pragmatische Loesung." },
+      { heading: "Tipp: Workarounds im System Prompt hinterlegen", text: "Genau solche Informationen — welche Quellen blockiert sind, welche Workarounds existieren, welche Repos die Doku spiegeln — sind ideale Kandidaten fuer den System Prompt (Kapitel 8). Wenn ihr Claude per API oder in einem eigenen Tool nutzt, hinterlegt den GitHub-Workaround direkt im System Prompt. So muss niemand das Problem erst entdecken und die Loesung selbst finden. Das ist ein konkretes Beispiel dafuer, wie System Prompts Wissen institutionalisieren." },
+    ],
+    takeaway: "robots.txt kontrolliert, welche AI-Tools auf welche Websites zugreifen duerfen. SAP Help blockiert Claude — aber die Datasphere-Doku liegt als Workaround auf GitHub.",
+    links: [
+      { label: "SAP Datasphere Docs (GitHub)", url: "https://github.com/SAP-docs/sap-datasphere" },
+      { label: "SAP Community", url: "https://community.sap.com" },
+      { label: "robots.txt Spezifikation", url: "https://en.wikipedia.org/wiki/Robots.txt" },
+    ],
+  },
+
+  },
+  en: {
+  1: {
+    title: "Where does AI come from?",
+    intro: "Artificial Intelligence is not an invention of recent years. The idea of teaching machines to think is almost as old as the computer itself. What has changed: since around 2017, we finally have enough computing power and data to implement the ideas of the past.",
+    timeline: [
+      { year: "1950", yearVal: 1950, label: "Turing Test", icon: "💡", sectionIdx: 0, color: "#6B7280" },
+      { year: "1956", yearVal: 1956, label: "Term \"AI\"", icon: "🏛️", sectionIdx: 1, color: "#6B7280" },
+      { year: "1970s", yearVal: 1975, label: "AI Winter", icon: "❄️", sectionIdx: 2, color: "#94A3B8" },
+      { year: "1997", yearVal: 1997, label: "Deep Blue", icon: "♟️", sectionIdx: 3, color: "#7C6BBF" },
+      { year: "2012", yearVal: 2012, label: "Deep Learning", icon: "🧠", sectionIdx: 4, color: "#2563EB" },
+      { year: "2017", yearVal: 2017, label: "Transformer", icon: "⚡", sectionIdx: 5, color: "#D97706" },
+      { year: "2022+", yearVal: 2022, label: "LLM Era", icon: "🚀", sectionIdx: 6, color: "#1D9E75" },
+    ],
+    sections: [
+      { heading: "1950 — Alan Turing asks the question", text: "Alan Turing publishes \"Computing Machinery and Intelligence\" and formulates the Turing Test: Can a machine behave in such a way that a human cannot distinguish whether they are talking to a human or a machine?" },
+      { heading: "1956 — The term is born", text: "At a conference at Dartmouth College, the term \"Artificial Intelligence\" is coined. Researchers believed machines could solve any intellectual problem within a generation." },
+      { heading: "1960s–1980s — AI Winter", text: "Early expert systems emerged but were expensive, fragile, and hard to scale. The \"AI Winter\" followed — a period of disillusionment with funding cuts." },
+      { heading: "1997 — Deep Blue vs. Kasparov", text: "IBM's chess computer Deep Blue defeats the world champion. Important: Deep Blue was not a learning AI — brute force, millions of moves per second, but no understanding of chess." },
+      { heading: "2012 — Deep Learning becomes practical", text: "AlexNet wins the ImageNet competition. Three factors converged: large datasets, powerful GPUs, and improved algorithms." },
+      { heading: "2017 — The Transformer", text: "Google publishes \"Attention is All You Need\". The Transformer architecture is the foundation of all modern language models.", video: "eMlx5fFNoYc", sectionLinks: [
+        { label: "Transformer Explainer — Interactive Demo (Georgia Tech)", url: "https://poloclub.github.io/transformer-explainer/" },
+        { label: "The Illustrated Transformer — Jay Alammar", url: "https://jalammar.github.io/illustrated-transformer/" },
+      ]},
+      { heading: "2022–today — The LLM Era", text: "With ChatGPT, AI reaches the mainstream. Claude (Anthropic), Gemini (Google), Llama (Meta) and many more follow." },
+    ],
+    takeaway: "AI is the result of 70 years of research. What was missing: data, computing power, and the Transformer.",
+    links: [
+      { label: "Turing Test (Wikipedia)", url: "https://en.wikipedia.org/wiki/Turing_test" },
+      { label: "SAP AI Learning Journey", url: "https://learning.sap.com/learning-journeys/exploring-the-sap-enterprise-architecture-framework-foundation" },
+    ],
+  },
+  2: {
+    title: "AI vs. ML vs. DL vs. GenAI",
+    diagram: "ai-hierarchy",
+    intro: "The terms AI, ML, Deep Learning and LLM are often used interchangeably — but they describe different things.",
+    video: "qYNweeDHiyU",
+    sections: [
+      { heading: "AI — the umbrella term", text: "AI is technology that enables computers to simulate human learning, comprehension, problem solving, decision making, creativity and autonomy. In short: a computer makes decisions as well as or better than a human. This includes rule-based systems (spam filters, SAP workflows), statistical models and learning systems. Important: not every AI learns." },
+      { heading: "Machine Learning", text: "In ML, you feed data + expected results and get the rules (the model). The model recognizes patterns in data and finds anomalies — like the wrong symbol in a sequence.\n\nMethods:\n* Supervised Learning — learns from labeled examples\n* Unsupervised Learning — finds structures in unlabeled data\n* Reinforcement Learning — learns through trial and error" },
+      { heading: "Deep Learning", text: "Neural networks with many layers. Can recognize complex patterns but requires large datasets and significant computing power (GPUs/TPUs). The result is often a black box — internal decision paths are hard to trace." },
+      { heading: "Foundation Models and GenAI", text: "Foundation Models (FM) are large, pre-trained deep learning models adaptable for various tasks. FM split into two branches:\n\nGenAI — creates new, open-ended content:\n* LLM for text — Claude (Anthropic), GPT (OpenAI), Gemini (Google), Llama (Meta)\n* IMG for images — DALL-E (OpenAI), Midjourney, Stable Diffusion (Stability AI)\n* AUD for audio — ElevenLabs, Suno, Whisper (OpenAI)\n* VID for video — Sora (OpenAI), Runway, Veo (Google)\n\nPredictive FM — forecasts constrained values (number, category, probability):\n* SAP RPT-1 (Relational Pre-Trained Transformer) — predicts field values in tables: payment delays, supplier risks, customer churn. One single pre-trained model replaces hundreds of classical ML models." },
+      { heading: "Generated vs. Predicted", text: "GenAI and Predictive FM both use transformers, but the output differs fundamentally:\n* GenAI produces open, creative content — like a free text field\n* Predictive FM produces constrained values — like a dropdown\n\nWith GenAI, hallucination is the risk; with Predictive FM, it is prediction accuracy. SAP\'s Predictive FM is called RPT-1 and works directly with tabular business data — details and BW analogy in Chapter 14." },
+      { heading: "Why this matters", text: "When a customer says \"we want AI\": Do they need ML, or are rules sufficient? Do they need an LLM for text, or an image model? For tabular SAP data, classical ML methods are often better than Foundation Models." },
+    ],
+    takeaway: "AI is the umbrella term, ML learns from data, Deep Learning uses neural networks. Foundation Models split into GenAI (creates new content: LLM, IMG, AUD, VID) and Predictive FM (forecasts values: RPT-1). The boundary is fluid — mechanically, both generate.",
+    links: [
+      { label: "SAP AI Core", url: "https://help.sap.com/docs/sap-ai-core" },
+      { label: "SAP HANA PAL", url: "https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-predictive-analysis-library" },
+    ],
+  },
+  3: {
+    title: "What is an LLM?",
+    intro: "A Large Language Model is a neural network trained on vast amounts of text data.",
+    sections: [
+      { heading: "Core Principle: Next Token Prediction", text: "An LLM predicts the next most probable token — over and over again." },
+      { heading: "Training", text: "Pre-training on billions of documents, then fine-tuning (RLHF) for helpful responses." },
+      { heading: "Parameters", text: "Small: 7-13B. Medium: 30-70B. Large: 100B+. Size affects quality, cost, and speed." },
+      { heading: "Inference", text: "The model generates an answer token by token — that is why it appears word by word." },
+      { heading: "Temperature", text: "Temperature 0 = predictable. Temperature 1+ = more creative but more error-prone." },
+    ],
+    takeaway: "An LLM is a text prediction machine. Quality comes from training data, parameters, and human feedback.",
+    links: [
+      { label: "Anthropic Research", url: "https://www.anthropic.com/research" },
+      { label: "SAP Generative AI Hub", url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core" },
+    ],
+  },
+  4: {
+    title: "What is a Token?",
+    intro: "Tokens are the basic building blocks into which an LLM breaks down text.",
+    video: "OjrGu0L5K7M",
+    sections: [
+      { heading: "Tokenization", text: "\"Understanding\" becomes e.g. [\"under\", \"stand\", \"ing\"] — three tokens." },
+      { heading: "Rule of thumb", text: "1 token ~ 4 characters ~ 3/4 word (English). German texts consume 20-40% more tokens." },
+      { heading: "Why it matters", text: "Tokens determine cost, speed, and capacity (context window)." },
+      { heading: "Multilingual", text: "Tokenizers are optimized for English. German texts consume more tokens." },
+    ],
+    takeaway: "Tokens are the currency of the LLM world.",
+    links: [
+      { label: "OpenAI Tokenizer", url: "https://platform.openai.com/tokenizer" },
+      { label: "Anthropic Pricing", url: "https://www.anthropic.com/pricing" },
+    ],
+  },
+  5: {
+    title: "Context Window",
+    intro: "The context window is the maximum amount of text an LLM can 'see' at once — input and output combined.",
+    sections: [
+      { heading: "What is the context window?", text: "Think of it as a desk. Everything on it can be considered by the model. What does not fit does not exist. Input (question, documents, system prompt) and output (answer) share this space.",
+        infobox: { title: "BW Analogy: DTP Data Packages", text: "In every BW transformation — whether start, end, or expert routine — you only see the records in the current DTP data package. What was processed in the previous package is gone. What comes next is not yet available.\n\nThe context window works exactly the same way: what is in it exists for the model. What is not — previous conversations, documents not provided — does not exist. The DTP package size corresponds to the model's context window size." }
+      },
+      { heading: "Size ranges (2026)", text: "Current context window sizes:\n* Claude (Anthropic): up to 200,000 tokens (~500 pages)\n* GPT-4o (OpenAI): up to 128,000 tokens\n* Gemini (Google): up to 2M tokens\n\nFor comparison: an average book has ~100,000 tokens — Claude can process an entire book in one request." },
+      { heading: "Context window is not memory", text: "The context window is not long-term memory. After each session it is cleared. What was discussed before is no longer available — unless explicitly re-inserted." },
+      { heading: "Practical meaning for SAP", text: "Can I analyze an entire ABAP program at once? Does the Datasphere documentation fit in the context? How many table rows can I submit? The answer depends directly on the context window size." },
+    ],
+    takeaway: "The context window is the working memory of an LLM — not its long-term memory. A large context window is a real advantage for enterprise use cases.",
+    links: [{ label: "Claude Model Card", url: "https://docs.anthropic.com/en/docs/about-claude/models" }],
+  },
+  6: {
+    title: "Model Selection",
+    intro: "Not every problem needs the largest model. The right choice depends on task, budget, data privacy, and speed.",
+    sections: [
+      { heading: "Open Source vs. Closed Source", text: "Closed Source (Claude, GPT-4, Gemini): Better at complex reasoning, but data goes to the provider. Open Source (Llama, Mistral, Qwen): Can run locally with full data control, but often weaker. For SAP customers with strict privacy requirements, open source may be the only option." },
+      { heading: "Model sizes and trade-offs", text: "Small (7-13B): Fast, cheap, good for classification. Medium (30-70B): Good balance. Large (100B+): Best quality for reasoning and code, but more expensive and slower." },
+      { heading: "Token-based pricing", text: "API models charge per token. Input cheaper than output (factor 3-5x). A 100-page analysis costs cents — but thousands of daily calls add up. SAP AI Core supports multiple providers via the Generative AI Hub." },
+      { heading: "Decision matrix", text: "Can data leave the infrastructure? No -> Open Source. How complex? Simple -> small model. How many requests? Thousands -> smaller model more economical." },
+    ],
+    takeaway: "Model selection = Quality x Cost x Data Privacy. SAP AI Core provides access to multiple models through one interface.",
+    links: [
+      { label: "Anthropic Pricing", url: "https://www.anthropic.com/pricing" },
+      { label: "SAP Generative AI Hub", url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core" },
+      { label: "Chatbot Arena — Live Rankings", url: "https://lmarena.ai/" },
+    ],
+  },
+  7: {
+    title: "Prompt Engineering",
+    intro: "The quality of an AI response depends critically on the question. Prompt Engineering is the methodology for formulating requests to get the best possible answer.",
+    sections: [
+      { heading: "Why it matters", text: "\"Explain SAP\" yields a generic answer. \"Explain to a mid-market CFO without SAP experience in 3 paragraphs why S/4HANA offers advantages over legacy ERP. Focus: TCO, real-time reporting, cloud readiness\" delivers a much better one." },
+      { heading: "Core principles", text: "\n* Be specific — define audience, length, focus\n* Provide context — explain the background\n* Define the format — table, JSON, prose\n* Use examples (Few-Shot) — show what you expect\n* Request step-by-step reasoning (Chain-of-Thought) — measurably improves quality for complex tasks.",
+        infobox: { title: "ABAP Analogy: SELECT Statement", text: "A SELECT * FROM bseg gives you everything — millions of records, unstructured, slow, expensive. A precise SELECT bukrs belnr gjahr FROM bseg WHERE bukrs = '1000' AND gjahr = '2026' ORDER BY belnr delivers exactly what you need.\n\nSame with prompts: \"Explain SAP\" = SELECT *. \"Explain to a CFO without SAP experience in 3 paragraphs the advantages of S/4HANA, focus: TCO and real-time reporting\" = precise SELECT with WHERE clause." }
+      },
+      { heading: "Roles and perspectives", text: "\"You are an SAP FI/CO consultant with 15 years of experience\" — helps the model hit the right level of detail." },
+      { heading: "Iterative prompting", text: "The first answer is rarely perfect. Prompt Engineering is iterative: Request -> Evaluate -> Refine -> Ask again. Save good prompts as templates." },
+    ],
+    takeaway: "Good prompts are specific, context-rich, and formatted. Build a prompt library.",
+    links: [
+      { label: "Anthropic Prompt Engineering Guide", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview" },
+      { label: "OpenAI Prompt Engineering", url: "https://platform.openai.com/docs/guides/prompt-engineering" },
+    ],
+  },
+  8: {
+    title: "System Prompts",
+    intro: "A system prompt permanently defines who the AI is and how it should behave — across many requests. The job description rather than the individual instruction.",
+    sections: [
+      { heading: "What is a system prompt?", text: "A pre-instruction sent with every request. It defines role, tone, domain, constraints, and format. The user typically does not see it — it works in the background.",
+        infobox: { title: "BW Analogy: RSADMIN Parameters", text: "RSADMIN entries are hidden configuration parameters that control the behavior of the entire BW system. You set them once via SE16 on table RSADMIN, no end user knows about them — but they affect every query execution, every DTP run, every transformation.\n\nA system prompt works the same way: you define the AI's behavior once, the end user does not see it, but every response is shaped by it. Invisible yet omnipresent." }
+      },
+      { heading: "Difference from normal prompts", text: "Prompt Engineering = optimizing the individual question. System Prompt = defining overall behavior. The system prompt is the job description, the prompt is the individual work order." },
+      { heading: "Building a good system prompt", text: "\n* Role definition — \"You are an SAP Datasphere expert.\"\n* Behavior rules — \"Respond in German. Use SAP terminology.\"\n* Constraints — \"Say clearly when you are unsure.\"\n* Output format — \"Format as table.\"" },
+      { heading: "Example: SAP consultant bot", text: "\"You are an experienced SAP S/4HANA consultant at CBS. Respond in German, use correct transaction codes, reference SAP Help, format ABAP code in code blocks, and explicitly state when you are unsure.\"" },
+      { heading: "Precursor to Skills", text: "System prompts are the first step toward reproducible quality. Combined with tool access (MCP) and domain knowledge, they become a Skill — the next evolution (Chapter 16)." },
+    ],
+    takeaway: "System Prompts = consistent AI quality. Job description instead of individual instruction. Precursor to Skills.",
+    links: [{ label: "Anthropic: System Prompts Best Practices", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts" }],
+  },
+  9: {
+    title: "What is an Agent?",
+    intro: "An AI Agent is a system that not only answers but autonomously plans tasks, uses tools, and makes decisions. The difference: an agent acts.",
+    sections: [
+      { heading: "Chatbot vs. Agent", text: "A chatbot is reactive: it answers questions. An agent is proactive: it breaks tasks into steps, selects tools, executes actions, checks results, and self-corrects." },
+      { heading: "Tools", text: "What makes agents powerful: access to web search, databases, API calls (e.g. SAP APIs), code execution, file systems, email." },
+      { heading: "The Agent Loop", text: "\n* Receive task and understand it\n* Create plan — which steps, which tools?\n* Call tool, evaluate result\n* Decide: done or next step?\n* Deliver result\n\nThis loop repeats — the agent thinks iteratively.",
+        infobox: { title: "BW Analogy: Dynamic Process Chain", text: "A BEx query is like a chatbot — it answers a single question. A process chain is like an agent — it executes multiple steps sequentially, checks results (green/red), and takes alternative paths on errors.\n\nThe key difference: in a process chain, the chain links are predefined in the designer. An agent determines the next step at runtime based on the result of the current step. Imagine a process chain where the next links are not fixed at design time but decided dynamically." }
+      },
+      { heading: "SAP Context: Joule", text: "SAP Joule is SAP's AI agent. It executes transactions, queries data, and automates processes via natural language. Joule Studio 2.0 (Sapphire 2026) enables custom skills and agents." },
+      { heading: "Multi-agent systems", text: "Next level: specialized agents work together. A finance agent for FI/CO, a procurement agent for MM/Ariba, an orchestrator coordinates. This requires A2A (Chapter 13)." },
+    ],
+    takeaway: "Agents: from AI that answers to AI that acts. Tools and iterative work are the key. Joule is SAP's implementation.",
+    links: [
+      { label: "SAP Joule", url: "https://help.sap.com/docs/joule" },
+      { label: "Anthropic: Building Agents", url: "https://docs.anthropic.com/en/docs/build-with-claude/agentic" },
+    ],
+  },
+  10: {
+    title: "Hallucinations & Limits",
+    intro: "LLMs sometimes generate convincing but factually incorrect statements. These are not bugs but architectural properties — and the most important reason to always verify AI results.",
+    sections: [
+      { heading: "What are hallucinations?", text: "LLMs generate statistically plausible continuations — they do not 'know' whether something is true. Without clear training data, the model invents. Typical: fabricated sources, non-existent SAP transaction codes, wrong numbers with convincing precision." },
+      { heading: "When does it happen?", text: "Niche topics (specific SAP customizing questions). Current events after training cutoff. Specific numbers and references. When the model is forced to answer instead of saying 'I do not know'." },
+      { heading: "Countermeasures", text: "RAG — provide external data as context (Chapter 13). Grounding — anchor answers in sources. Clear prompts: 'Say when you are unsure.' Low temperature for facts. Always verify critical results." },
+      { heading: "Other limitations", text: "No real understanding — patterns, not thinking. No access to current data without tools. No math guarantee. No long-term memory. Bias from training data." },
+    ],
+    takeaway: "Hallucinations are the price of creativity. For productive use: RAG, grounding, and verification. Trust, but verify.",
+    links: [{ label: "Anthropic: Reducing Hallucinations", url: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/reduce-hallucinations" }],
+  },
+  12: {
+    title: "Responsible AI",
+    intro: "With the EU AI Act, responsible AI use becomes mandatory. For SAP consultants, knowledge of regulation and ethics is not optional — it is required.",
+    sections: [
+      { heading: "EU AI Act", text: "In force since 2024. Risk levels:\n* Minimal Risk (chatbots) — labeling required\n* Limited Risk (content generation) — transparency required\n* High Risk (HR decisions, credit) — conformity assessment, documentation, human oversight\n* Unacceptable Risk (social scoring) — prohibited\n\n" },
+      { heading: "Data Privacy: GDPR meets AI", text: "Key questions: Which data may be sent to an LLM? Where is it processed — EU or US? Is data used for training? Is there a data processing agreement?",
+        infobox: { title: "BW Analogy: Analysis Authorizations", text: "In BW, you define via analysis authorizations (RSECADMIN) which user can see which data combinations. Company code 1000 yes, 2000 no. Cost center group PROD yes, HR no.\n\nThe same principle applies to Responsible AI: which data may go to which model? Which user may use which AI functions? The mechanics differ, the concept is identical: controlling data access." }
+      },
+      { heading: "SAP's approach", text: "\"Responsible AI by Design\" — built-in governance, audit trails, control. SAP AI Core processes data in the customer's hyperscaler region. Joule does not use customer data for training." },
+      { heading: "Bias and fairness", text: "LLMs inherit biases from training data. An AI recruiting tool could perpetuate existing discrimination. Countermeasures: diverse data, bias audits, human oversight for critical decisions." },
+    ],
+    takeaway: "Responsible AI is a regulatory requirement (EU AI Act). SAP consultants must understand data privacy, risk classes, and bias.",
+    links: [
+      { label: "EU AI Act", url: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai" },
+      { label: "SAP Responsible AI", url: "https://www.sap.com/products/artificial-intelligence/responsible-ai.html" },
+    ],
+  },
+  13: {
+    title: "RAG — Retrieval Augmented Generation",
+    intro: "RAG solves one of the biggest LLM problems: lack of access to current or company-specific data. Instead of retraining the model, you provide relevant documents at runtime.",
+    video: "UabBYexBD4k",
+    sections: [
+      { heading: "The problem", text: "An LLM only knows training data — nothing about your SAP configuration or customer contracts. Two paths: Fine-tuning (expensive, becomes outdated quickly) or RAG (flexible, current, cost-effective). RAG is the enterprise standard.",
+        infobox: { title: "BW Analogy: SDA with HCPR on Open ODS View", text: "Fine-tuning = full replication via DTP into an ADSO. Data is permanently in BW, always available, but must be actively refreshed when the source changes. The data is baked in.\n\nRAG = SDA access with HCPR on an Open ODS View. Data stays in the source system. At query runtime, relevant records are fetched via the virtual view, temporarily available in HANA memory, and gone after the query — not persisted, not replicated.\n\nThe Open ODS View fits particularly well: it is a virtual, schema-free view on external data — just as RAG is a virtual view on the vector database. HCPR fetches data temporarily into HANA memory, just as RAG loads chunks temporarily into the context window." }
+      },
+      { heading: "How RAG works", text: "\n* Split documents into chunks, store as vectors (embeddings)\n* Vectorize user question\n* Retrieve most similar chunks from vector database\n* Append chunks as context to the LLM prompt\n* LLM answers based on the provided context" },
+      { heading: "Embeddings and vector databases", text: "Embeddings are numerical representations of text — semantically similar texts are close together. SAP HANA Cloud has native Vector Engine support since 2024." },
+      { heading: "SAP Context: Grounding", text: "SAP AI Core offers grounding for Joule. Datasphere and BDC as data sources. The Knowledge Graph provides context about business objects. Important: SAP's grounding is technically a RAG pipeline." },
+      { heading: "Challenges", text: "Chunking strategy (too small = no context, too large = token waste). Data quality (garbage in, garbage out). Freshness (vector database must be updated). Hallucination despite RAG is possible." },
+    ],
+    takeaway: "RAG is the pragmatic enterprise solution. SAP HANA Cloud offers native vector support. Quality depends on chunking and data quality.",
+    links: [
+      { label: "SAP AI Core — Grounding", url: "https://help.sap.com/docs/sap-ai-core" },
+      { label: "SAP HANA Cloud Vector Engine", url: "https://help.sap.com/docs/hana-cloud-database" },
+    ],
+  },
+  14: {
+    title: "Tabular Foundation Models — SAP RPT-1",
+    intro: "While LLMs predict the next word in text, RPT-1 predicts the next field in a table row. It is SAP's Foundation Model for structured business data — and directly relevant for anyone working with tabular SAP data.",
+    sections: [
+      { heading: "What is a Tabular Foundation Model?", text: "LLMs understand text. But most SAP data is not text — it is tables: postings, purchase orders, delivery notes, time records. A Tabular Foundation Model (TFM) is a pre-trained model specifically designed for this type of structured data.\n\nSAP's RPT-1 (Relational Pre-Trained Transformer, pronounced \"rapid one\") is exactly that: a transformer trained on relational business data that predicts business outcomes." },
+      { heading: "Next Field Prediction vs. Next Token Prediction", text: "The core principle is analogous to LLMs, but for tables:\n* LLM: Given text, predict the next token\n* RPT-1: Given a table row, predict the next field value\n\nExample: Given customer, order history, industry, and region — what is the probability of a late payment?" },
+      { heading: "RPT-1 vs. Classical ML", text: "Both learn from data and make predictions. The difference is how:\n\nClassical ML:\n* A separate model per task (churn, payment delay, supplier risk)\n* Each needs its own training data and feature engineering\n* Weeks to months per model\n* Requires data scientists\n\nRPT-1:\n* One pre-trained model for many tasks\n* In-context learning — provide context instead of retraining\n* One API call instead of a training pipeline\n* Significantly faster to deploy",
+        infobox: { title: "BW Analogy: InfoProvider per analysis vs. CompositeProvider", text: "Classical ML is like building a separate InfoProvider with its own transformation and process chain for each analysis. Each use case needs its own setup — expensive, redundant, hard to maintain.\n\nRPT-1 is like a CompositeProvider that serves many different queries with a single model. Set up once, flexibly usable, less maintenance overhead." }
+      },
+      { heading: "Concrete SAP Use Cases", text: "\n* Payment delays — When will an invoice be paid?\n* Supplier risk — How reliable is a supplier?\n* Customer churn — Which customers are at risk of leaving?\n* Upsell opportunities — Which customers are likely to buy more?\n* Demand forecasting — How much will be ordered next month?" },
+      { heading: "Three Variants", text: "\n* RPT-1 Small — optimized for speed, good for real-time scenarios\n* RPT-1 Large — optimized for accuracy, better for complex predictions\n* RPT-1 OSS — Open Source on HuggingFace, for own infrastructure\n\nAll available via SAP Generative AI Hub since Q4 2025. RPT-1.5 is planned for late September 2026." },
+      { heading: "Comparison with SAP HANA PAL/APL", text: "SAP HANA already offers ML functions directly in the database via PAL (Predictive Analysis Library) and APL (Automated Predictive Library). The difference:\n* PAL/APL = classical ML, one model per task, runs directly in HANA\n* RPT-1 = Foundation Model, one model for many tasks, runs in SAP AI Core\n\nPAL/APL remains relevant for scenarios that must run directly in the database. RPT-1 is the better choice when flexibility and rapid deployment matter more." },
+    ],
+    takeaway: "RPT-1 does for tabular data what LLMs did for text: one pre-trained model replaces many specialized individual models. Especially relevant for SAP consultants because it works directly with the structured data you see daily in BW.",
+    links: [
+      { label: "SAP RPT-1 (Techzine)", url: "https://www.techzine.eu/news/analytics/131498/sap-launches-rpt-1-the-end-of-machine-learning/" },
+      { label: "SAP Generative AI Hub", url: "https://help.sap.com/docs/sap-ai-core/sap-ai-core-service-guide/generative-ai-hub-in-sap-ai-core" },
+      { label: "SAP HANA PAL", url: "https://help.sap.com/docs/hana-cloud-database/sap-hana-cloud-sap-hana-database-predictive-analysis-library" },
+      { label: "RPT-1 vs Classical ML — The Models Battle (SAP Community)", url: "https://community.sap.com/t5/technology-blog-posts-by-members/sap-rpt-1-context-model-vs-training-classical-models-the-models-battle/ba-p/14268507" },
+      { label: "RPT-1 OSS (HuggingFace)", url: "https://huggingface.co/SAP" },
+    ],
+  },
+  15: {
+    diagram: "mcp-a2a",
+    title: "MCP vs. A2A — Agent Protocols",
+    intro: "The enterprise AI landscape converges on two complementary protocols: MCP for Agent-to-Tools (vertical) and A2A for Agent-to-Agent (horizontal).",
+    sections: [
+      { heading: "MCP — Model Context Protocol", text: "Open-source standard by Anthropic. Connects an agent to external tools, databases, and APIs. USB-C for AI — one standardized connector. 97M+ downloads.", video: "TjvT9sI5mLE" },
+      { heading: "Tool Calling vs. MCP — What is the difference?", text: "Tool Calling (Function Calling) is a capability of the LLM itself: you define functions in the API call, the LLM decides whether to invoke them. Simple, fast, full control — but hardwired in your application. MCP is the protocol layer above: tools are exposed in a standardized way, dynamically discovered, and usable by any MCP-compatible client.",
+        infobox: { title: "ABAP Analogy for BW Consultants", text: "Tool Calling = ABAP code directly in a BW transformation (start/end/expert routine). It works, it is fast — but the logic is tied to that one transformation. Need it elsewhere? Copy the code.\n\nMCP = A method in an ABAP class (SE24). Clean importing/exporting parameters, any transformation and any report can call it. Change the implementation, all callers benefit.\n\nTaken further: the MCP server is like an ABAP Interface (IF_...) — it defines the contract. Different classes can serve the same interface, just as different MCP servers speak the same protocol." }
+      },
+      { heading: "A2A — Agent-to-Agent Protocol", text: "Initiated by Google (April 2025), now under the Linux Foundation (AAIF) — co-founded by OpenAI, Anthropic, Google, Microsoft, AWS. v1.2 since March 2026, 150+ organizations.", video: "BMDFPOyezH4" },
+      { heading: "MCP + A2A = Complete", text: "MCP is vertical: agent accesses tools. A2A is horizontal: agents talk to each other. Example: An SAP Joule agent (contacted via A2A) uses MCP internally for the Knowledge Graph, executes a query, returns the result via A2A." },
+      { heading: "SAP's Dual-MCP Strategy", text: "Internally, Joule uses MCP for Knowledge Graph, semantics, and ontologies — deeply integrated, not exposed. Externally, Integration Suite plans an MCP Gateway (Q2 2026). But: the official recommendation is A2A via Agent Gateway for external access.", sectionLinks: [
+        { label: "Mario Defelipe: SAP has two MCPs", url: "https://medium.com/@mario.defelipe/sap-has-two-mcps-one-you-cant-use-one-you-shouldn-t-445ce6e409b9" },
+        { label: "SAP: A2A vs. MCP Reference Architecture", url: "https://architecture.learning.sap.com/docs/ref-arch/ca1d2a3e/1" },
+      ]},
+      { heading: "Example: BW/4HANA MCP Server", text: "David Nicolay developed an MCP Server for BW/4HANA modeling. Important: SAP prohibited REST API usage for this purpose in the terms of use on 27.04.2026.", sectionLinks: [
+        { label: "GitHub: dnic-dev/bw-modeling-mcp", url: "https://github.com/dnic-dev/bw-modeling-mcp" },
+        { label: "David Nicolay — BW MCP Server (LinkedIn)", url: "https://www.linkedin.com/posts/david-nicolay-420a9327a_sapbw-mcp-aiagents-ugcPost-7457448447609028608-SpqS" },
+      ]},
+    ],
+    takeaway: "MCP for tool access (vertical), A2A for agent coordination (horizontal). SAP uses both — MCP internally, A2A externally. Compliance moves fast.",
+    links: [
+      { label: "Model Context Protocol", url: "https://modelcontextprotocol.io" },
+      { label: "A2A Protocol", url: "https://google.github.io/A2A/" },
+      { label: "SAP AI Golden Path", url: "https://architecture.learning.sap.com/docs/aigp" },
+    ],
+  },
+  16: {
+    title: "SAP Business AI Platform",
+    intro: "Announced at Sapphire 2026: BTP + Business Data Cloud + SAP Business AI = one integrated platform as the foundation for the \"Autonomous Enterprise\" vision.",
+    sections: [
+      { heading: "Three become One", text: "SAP merged BTP, BDC, and SAP Business AI. One license model, one administration, one data layer." },
+      { heading: "Joule as AI Orchestrator", text: "Joule is no longer just a chatbot but the central AI gateway. Joule Studio 2.0: custom skills and agents with low-code in SAP Build. MCP internally, A2A externally via Agent Gateway." },
+      { heading: "Knowledge Graph — SAP's Moat", text: "Connects business objects, processes, and semantics across all modules. It knows that a sales order in SD links to a WBS in PS that affects cost centers in CO. This knowledge differentiates SAP from generic platforms. Only accessible via Joule through A2A." },
+      { heading: "North Star Architecture", text: "The target vision: AI as an intelligence layer over deterministic systems. Not a roadmap but a direction. Deterministic processes stay deterministic. AI optimizes, recommends, automates — without compromising data integrity." },
+      { heading: "AI Golden Path & Decision Tree", text: "Practical orientation aids: which AI technology for which use case? Do I need Joule, a custom agent, RAG, fine-tuning, or classical ML?" },
+    ],
+    takeaway: "SAP's moat is the Knowledge Graph and process expertise — not the LLM itself. Platform consolidation simplifies the enterprise AI landscape.",
+    links: [
+      { label: "SAP North Star Architecture", url: "https://architecture.learning.sap.com/docs/ai-native-north-star-architecture" },
+      { label: "SAP AI Golden Path", url: "https://architecture.learning.sap.com/docs/ai-golden-path" },
+      { label: "AI Decision Tree", url: "https://architecture.learning.sap.com/docs/golden-path/ai-golden-path/technology-overview" },
+      { label: "Sapphire 2026 Announcements", url: "https://community.sap.com/t5/technology-blog-posts-by-sap/sap-sapphire-2026-announcements-only/ba-p/14396190" },
+      { label: "A2A vs. MCP — SAP Reference Architecture", url: "https://architecture.learning.sap.com/docs/ref-arch/ca1d2a3e/1" },
+    ],
+  },
+  17: {
+    title: "Skills — Reproducible AI Competence",
+    intro: "Skills combine system prompt, tool access, and domain knowledge into a reproducible package. They make agents consistently good at a specific task.",
+    sections: [
+      { heading: "What is a Skill?", text: "Three elements:\n* System prompt with role and rules\n* Tool access via MCP\n* Domain-specific knowledge (best practices, docs, examples)\n\nTogether a package for reproducibly good results." },
+      { heading: "Skill vs. Agent vs. Tool", text: "Tool = individual instrument (API call). Agent = system that acts. Skill = the knowledge of how the agent uses the tool. Analogy: craftsman (agent) has a toolbox (tools). The skill is their training." },
+      { heading: "SAP: Joule Studio", text: "Joule Studio 2.0 enables custom skills with low-code in SAP Build. A skill defines which SAP services the agent may use, which business logic applies, and how it interacts." },
+      { heading: "Skills-over-MCP", text: "Advanced concept: the MCP server delivers not only tools but also documentation, best practices, and context info. Not 'here is an API endpoint' but 'here is the endpoint, here is how you use it, these are common mistakes'. Makes agent results reproducibly good regardless of which LLM is behind it." },
+      { heading: "Why Skills are the key", text: "Enterprise needs reproducibility. Skills solve this by providing structured domain knowledge. For SAP consultants: Skills are what you sell — not the model, but the process expertise." },
+    ],
+    takeaway: "Skills = reproducible AI quality. Tools + methodology + domain knowledge. In SAP: Joule Studio. Generally: Skills-over-MCP delivers methodology with the tool.",
+    links: [
+      { label: "Joule Studio 2.0", url: "https://architecture.learning.sap.com/docs/ref-arch/06ff6062dc" },
+      { label: "SAP AI Golden Path", url: "https://architecture.learning.sap.com/docs/aigp" },
+      { label: "Model Context Protocol", url: "https://modelcontextprotocol.io" },
+    ],
+  },
+  11: {
+    title: "Robots.txt & Web Access",
+    intro: "AI agents like Claude use web access to retrieve current information. But not every website allows this — the robots.txt file determines which bots may access and which may not. For SAP consultants, this is a very concrete problem.",
+    sections: [
+      { heading: "What is robots.txt?", text: "Every website can place a robots.txt file in its root directory (e.g. example.com/robots.txt). It defines rules for web crawlers and bots: which bot may access which pages? A 'Disallow: /' means: access completely forbidden. Search engine bots like Googlebot comply — and AI tools like Claude do too." },
+      { heading: "The SAP Help problem", text: "help.sap.com blocks Claude's web fetch tool via robots.txt. The robots.txt lists 'ClaudeBot' in the Allow list, but the fetch tool uses a different User-Agent that falls under the default rule 'User-agent: * / Disallow: /'. Result: ROBOTS_DISALLOWED error on every access. www.sap.com is also blocked." },
+      { heading: "The GitHub workaround", text: "SAP maintains the complete Datasphere documentation as Markdown on GitHub: github.com/SAP-docs/sap-datasphere. Filenames correspond to Help portal pages. Example: the Help URL with ID 'de1ed47' can be found as 'create-a-structure-for-an-analytic-model-de1ed47.md' on GitHub. Claude can fetch GitHub URLs without issues.",
+        sectionLinks: [
+          { label: "SAP Datasphere Docs on GitHub", url: "https://github.com/SAP-docs/sap-datasphere" },
+        ]
+      },
+      { heading: "What works, what does not", text: "Works: SAP Community (community.sap.com), GitHub SAP-docs repos, SAP Architecture Center. Does NOT work: help.sap.com, www.sap.com, SAP What's New pages (not mirrored on GitHub). Tip: When Claude cannot load an SAP Help page, take the file ID from the URL and search on GitHub." },
+      { heading: "Why this matters for SAP consultants", text: "When you use Claude for SAP research and encounter 'I cannot access this page', it is usually due to robots.txt. This is not a Claude error but a deliberate decision by the website operator. The GitHub workaround for Datasphere docs is the pragmatic solution." },
+      { heading: "Tip: Store workarounds in the System Prompt", text: "Exactly this kind of information — which sources are blocked, which workarounds exist, which repos mirror the documentation — are ideal candidates for the System Prompt (Chapter 8). If you use Claude via API or in a custom tool, store the GitHub workaround directly in the System Prompt. That way nobody has to discover the problem and find the solution themselves. This is a concrete example of how System Prompts institutionalize knowledge." },
+    ],
+    takeaway: "robots.txt controls which AI tools can access which websites. SAP Help blocks Claude — but Datasphere documentation is available as a workaround on GitHub.",
+    links: [
+      { label: "SAP Datasphere Docs (GitHub)", url: "https://github.com/SAP-docs/sap-datasphere" },
+      { label: "SAP Community", url: "https://community.sap.com" },
+      { label: "robots.txt Specification", url: "https://en.wikipedia.org/wiki/Robots.txt" },
+    ],
+  },
+  },
+};
+
+function VideoEmbed({ videoId }) {
+  return (
+    <a href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener noreferrer"
+      style={{ display: "block", position: "relative", width: "100%", paddingBottom: "56.25%", margin: "16px 0 8px", borderRadius: 10, overflow: "hidden", background: "#000", textDecoration: "none", cursor: "pointer" }}>
+      <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt="Video Thumbnail"
+        style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", minWidth: "100%", minHeight: "100%", objectFit: "cover" }} />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.25)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: 68, height: 48, background: "rgba(255,0,0,0.9)", borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 0, height: 0, borderLeft: "18px solid #fff", borderTop: "11px solid transparent", borderBottom: "11px solid transparent", marginLeft: 4 }} />
+        </div>
+      </div>
+      <div style={{ position: "absolute", bottom: 8, left: 8, background: "rgba(0,0,0,0.7)", color: "#fff", fontSize: 11, padding: "4px 8px", borderRadius: 4 }}>&#9654; YouTube</div>
+    </a>
+  );
+}
+function SectionLinks({ links, color }) {
+  return (<div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 10 }}>
+    {links.map((l, i) => (<a key={i} href={l.url} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "6px 12px", background: `${color}08`, border: `1px solid ${color}22`, borderRadius: 6, textDecoration: "none", color, fontSize: 13, fontWeight: 500 }}><span>&#8599;</span><span>{l.label}</span></a>))}
+  </div>);
+}
+function Timeline({ items, onMilestoneClick, activeIdx }) {
+  const minY = Math.min(...items.map(i => i.yearVal)), maxY = Math.max(...items.map(i => i.yearVal)), span = maxY - minY;
+  return (
+    <div style={{ margin: "8px 0 48px", padding: "28px 20px 12px", background: "#fff", border: "1px solid #e8e6e1", borderRadius: 14 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 24 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", color: "#999" }}>Timeline</div>
+        <div style={{ fontSize: 11, color: "#bbb" }}>{span} years</div>
+      </div>
+      <div style={{ position: "relative", height: 130, margin: "0 40px" }}>
+        <div style={{ position: "absolute", top: 30, left: 0, right: 0, height: 4, background: "linear-gradient(90deg, #d4d4d4 0%, #6B7280 25%, #7C6BBF 50%, #2563EB 70%, #D97706 85%, #1D9E75 100%)", borderRadius: 2 }} />
+        {[1960,1970,1980,1990,2000,2010,2020].map(d => { const pct=((d-minY)/span)*100; return (<div key={d} style={{ position:"absolute",left:`${pct}%`,top:22 }}><div style={{width:1,height:20,background:"#e2e2e2"}}/><div style={{fontSize:9,color:"#ccc",marginTop:2,transform:"translateX(-50%)",textAlign:"center"}}>{d}</div></div>); })}
+        {items.map((item,i) => { const pct=((item.yearVal-minY)/span)*100,isA=activeIdx===i; return (
+          <button key={i} onClick={()=>onMilestoneClick(item.sectionIdx)} style={{position:"absolute",left:`${pct}%`,top:0,transform:"translateX(-50%)",display:"flex",flexDirection:"column",alignItems:"center",background:"none",border:"none",cursor:"pointer",padding:0,zIndex:2}}>
+            <div style={{width:isA?52:44,height:isA?52:44,borderRadius:"50%",background:isA?item.color:"#fff",border:`3px solid ${item.color}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:isA?22:18,boxShadow:isA?`0 0 0 5px ${item.color}22, 0 6px 20px ${item.color}33`:"0 2px 8px rgba(0,0,0,0.1)",transition:"all 0.25s",marginTop:isA?-4:0}}>{item.icon}</div>
+            <div style={{fontSize:13,fontWeight:700,color:isA?item.color:"#444",marginTop:8,whiteSpace:"nowrap"}}>{item.year}</div>
+            <div style={{fontSize:11,color:isA?item.color:"#999",fontWeight:isA?600:400,whiteSpace:"nowrap"}}>{item.label}</div>
+          </button>); })}
+      </div>
+    </div>);
+}
+function AIHierarchy({ onCircleClick, dark }) {
+  const pad = 32, startX = 8, startY = 8, w = 504, h = 420;
+  const boxes = [
+    { label: "AI", color: "#6B7280", idx: 0 },
+    { label: "ML", color: "#2563EB", idx: 1 },
+    { label: "DL", color: "#7C6BBF", idx: 2 },
+    { label: "FM", color: "#1D9E75", idx: 3 },
+  ];
+  const mutedColor = dark ? "#777" : "#aaa";
+  return (
+    <div style={{margin:"8px 0 40px",padding:"20px",background:dark?"#242424":"#fff",border:`1px solid ${dark?"#333":"#e8e6e1"}`,borderRadius:14}}>
+      <svg viewBox="0 0 520 436" style={{width:"100%"}}>
+        {boxes.map((b,i) => {
+          const x = startX + i * pad;
+          const y = startY + i * pad;
+          const rw = w - i * pad * 2;
+          const rh = h - i * pad * 2;
+          return (
+            <g key={i} onClick={()=>onCircleClick(b.idx)} style={{cursor:"pointer"}}>
+              <rect x={x} y={y} width={rw} height={rh} rx={10} fill={`${b.color}${dark?"22":"10"}`} stroke={b.color} strokeWidth={2}/>
+              <text x={x + 14} y={y + 24} fill={b.color} fontSize={16} fontWeight={700}>{b.label}</text>
+            </g>
+          );
+        })}
+
+        {/* AI icons - left-aligned after label */}
+        <text x={startX + 50} y={startY + 24} fill={mutedColor} fontSize={15}>💻  ≥  🧑</text>
+
+        {/* ML icons - pattern sequence with anomaly */}
+        <g>
+          {["○","△","□","○","△","□","○","△","■"].map((s,i) => (
+            <text key={i} x={startX + pad + 56 + i*20} y={startY + pad + 24} fill={i===8?"#E53935":mutedColor} fontSize={i===8?15:13} fontWeight={i===8?700:400} textAnchor="middle">{s}</text>
+          ))}
+          <text x={startX + pad + 56 + 9*20 + 4} y={startY + pad + 24} fill="#E53935" fontSize={12}>⚠</text>
+        </g>
+
+        {/* DL icons - left-aligned after label: NN -> Brain */}
+        <text x={startX + 2*pad + 50} y={startY + 2*pad + 24} fill={mutedColor} fontSize={15}>NN  →  🧠</text>
+
+        {/* FM inner box - two branches: GenAI and Predictive */}
+        {(() => {
+          const fx = startX + 3*pad, fy = startY + 3*pad;
+          const fw = w - 6*pad, fh = h - 6*pad;
+          const cy = fy + fh/2 - 5;
+          const leftX = fx + fw * 0.35;
+          const rightX = fx + fw * 0.82;
+          return (
+            <g>
+              <text x={fx + 14} y={fy + 38} fill={dark?"#888":"#999"} fontSize={10}>Foundation Models</text>
+              <line x1={fx + fw/2} y1={cy - 55} x2={leftX} y2={cy - 35} stroke={mutedColor} strokeWidth={1}/>
+              <line x1={fx + fw/2} y1={cy - 55} x2={rightX} y2={cy - 35} stroke={mutedColor} strokeWidth={1}/>
+              <text x={leftX} y={cy - 40} fill={dark?"#aaa":"#555"} fontSize={12} fontWeight={600} textAnchor="middle">GenAI</text>
+              <text x={leftX} y={cy - 26} fill={mutedColor} fontSize={9} textAnchor="middle">(generates new content)</text>
+              <text x={leftX} y={cy - 2} fill={dark?"#aaa":"#666"} fontSize={15} textAnchor="middle">💬 LLM    🖼️ IMG</text>
+              <text x={leftX} y={cy + 20} fill={dark?"#aaa":"#666"} fontSize={15} textAnchor="middle">🎵 AUD    🎬 VID</text>
+              <text x={leftX} y={cy + 42} fill={mutedColor} fontSize={9} textAnchor="middle">LLM → Chatbots · IMG → Images</text>
+              <text x={leftX} y={cy + 54} fill={mutedColor} fontSize={9} textAnchor="middle">AUD + VID → Deep Fakes</text>
+              <text x={rightX} y={cy - 40} fill={dark?"#aaa":"#555"} fontSize={12} fontWeight={600} textAnchor="middle">Predictive</text>
+              <text x={rightX} y={cy - 26} fill={mutedColor} fontSize={9} textAnchor="middle">(predicts values)</text>
+              <text x={rightX} y={cy - 2} fill={dark?"#aaa":"#666"} fontSize={15} textAnchor="middle">📊</text>
+              <text x={rightX} y={cy + 20} fill={dark?"#aaa":"#666"} fontSize={13} textAnchor="middle">RPT-1</text>
+              <text x={rightX} y={cy + 42} fill={mutedColor} fontSize={9} textAnchor="middle">Tabular data</text>
+              <text x={rightX} y={cy + 54} fill={mutedColor} fontSize={9} textAnchor="middle">→ Predictions</text>
+              <line x1={fx + fw*0.6} y1={cy - 55} x2={fx + fw*0.6} y2={cy + 60} stroke={dark?"#444":"#ddd"} strokeWidth={1} strokeDasharray="3 3"/>
+            </g>
+          );
+        })()}
+
+      </svg>
+    </div>
+  );
+}
+
+function McpA2aDiagram({ dark }) {
+  const bg = dark ? "#242424" : "#fff";
+  const border = dark ? "#333" : "#e8e6e1";
+  const txt = dark ? "#ccc" : "#333";
+  const muted = dark ? "#888" : "#999";
+  const accent = "#5B4FC4";
+  const accentBg = dark ? "#2d2850" : "#EEEAFF";
+  const agentBg = dark ? "#2a2a3a" : "#E8E4F8";
+  const apiBg = dark ? "#2a2a3a" : "#D8D4EE";
+  return (
+    <div style={{margin:"8px 0 40px",padding:"20px",background:bg,border:`1px solid ${border}`,borderRadius:14}}>
+      <svg viewBox="0 0 600 340" style={{width:"100%"}}>
+        {/* Left Agent */}
+        <rect x="60" y="40" width="180" height="60" rx="8" fill={agentBg}/>
+        <text x="150" y="66" textAnchor="middle" fill={txt} fontSize={16} fontWeight={700}>Agent</text>
+        <text x="150" y="82" textAnchor="middle" fill={muted} fontSize={10}>🤖</text>
+
+        {/* Right Agent */}
+        <rect x="360" y="40" width="180" height="60" rx="8" fill={agentBg}/>
+        <text x="450" y="66" textAnchor="middle" fill={txt} fontSize={16} fontWeight={700}>Agent</text>
+        <text x="450" y="82" textAnchor="middle" fill={muted} fontSize={10}>🤖</text>
+
+        {/* A2A horizontal connection */}
+        <rect x="258" y="55" width="84" height="28" rx="6" fill={accentBg} stroke={accent} strokeWidth={1.5}/>
+        <text x="300" y="74" textAnchor="middle" fill={accent} fontSize={12} fontWeight={700}>A2A</text>
+        <line x1="240" y1="70" x2="258" y2="70" stroke={accent} strokeWidth={1.5} markerEnd="url(#mcpa)"/>
+        <line x1="342" y1="70" x2="360" y2="70" stroke={accent} strokeWidth={1.5} markerEnd="url(#mcpa)"/>
+        <line x1="258" y1="70" x2="240" y2="70" stroke={accent} strokeWidth={1.5} markerEnd="url(#mcpa)"/>
+
+        {/* Left MCP vertical */}
+        <rect x="115" y="140" width="70" height="28" rx="6" fill={accentBg} stroke={accent} strokeWidth={1.5}/>
+        <text x="150" y="159" textAnchor="middle" fill={accent} fontSize={11} fontWeight={700}>MCP</text>
+        <line x1="150" y1="100" x2="150" y2="140" stroke={accent} strokeWidth={1.5} markerEnd="url(#mcpa)"/>
+        <line x1="150" y1="168" x2="150" y2="200" stroke={accent} strokeWidth={1.5} markerEnd="url(#mcpa)"/>
+
+        {/* Left APIs box */}
+        <rect x="60" y="200" width="180" height="50" rx="8" fill={apiBg}/>
+        <text x="150" y="222" textAnchor="middle" fill={txt} fontSize={11} fontWeight={600}>APIs & Enterprise</text>
+        <text x="150" y="238" textAnchor="middle" fill={txt} fontSize={11} fontWeight={600}>Applications</text>
+
+        {/* Right MCP vertical */}
+        <rect x="415" y="140" width="70" height="28" rx="6" fill={accentBg} stroke={accent} strokeWidth={1.5}/>
+        <text x="450" y="159" textAnchor="middle" fill={accent} fontSize={11} fontWeight={700}>MCP</text>
+        <line x1="450" y1="100" x2="450" y2="140" stroke={accent} strokeWidth={1.5} markerEnd="url(#mcpa)"/>
+        <line x1="450" y1="168" x2="450" y2="200" stroke={accent} strokeWidth={1.5} markerEnd="url(#mcpa)"/>
+
+        {/* Right APIs box */}
+        <rect x="360" y="200" width="180" height="50" rx="8" fill={apiBg}/>
+        <text x="450" y="222" textAnchor="middle" fill={txt} fontSize={11} fontWeight={600}>APIs & Enterprise</text>
+        <text x="450" y="238" textAnchor="middle" fill={txt} fontSize={11} fontWeight={600}>Applications</text>
+
+        {/* Boundary line */}
+        <line x1="300" y1="110" x2="300" y2="290" stroke={muted} strokeWidth={1} strokeDasharray="4 4"/>
+        <text x="312" y="280" fill={muted} fontSize={9} transform="rotate(-90,312,280)">Organizational or technological boundaries</text>
+
+        {/* Labels at bottom */}
+        <text x="150" y="285" textAnchor="middle" fill={accent} fontSize={12} fontWeight={700}>MCP = vertical</text>
+        <text x="150" y="300" textAnchor="middle" fill={muted} fontSize={10}>Agent → Tools & Data</text>
+        <text x="450" y="285" textAnchor="middle" fill={accent} fontSize={12} fontWeight={700}>A2A = horizontal</text>
+        <text x="450" y="300" textAnchor="middle" fill={muted} fontSize={10}>Agent ↔ Agent</text>
+
+        {/* Source */}
+        <text x="60" y="330" fill={muted} fontSize={9}>Source: a2a-protocol.org</text>
+
+        <defs><marker id="mcpa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke={accent} strokeWidth="1.5"/></marker></defs>
+      </svg>
+    </div>
+  );
+}
+
+function getPhase(id,lang) { for (const p of phases[lang]) { if (p.chapters.some(c=>c.id===id)) return p; } return phases[lang][0]; }
+
+function LearningHub() {
+  const [ch, setCh] = useState(1);
+  const [sidebar, setSidebar] = useState(false);
+  const [hl, setHl] = useState(null);
+  const [lang, setLang] = useState("de");
+  const [dark, setDark] = useState(true);
+  const [search, setSearch] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const ref = useRef(null);
+  const chapter = C[lang][ch];
+  const phase = getPhase(ch, lang);
+  const t = dark ? {bg:"#1a1a1a",bg2:"#242424",card:"#2a2a2a",border:"#333",text:"#e0e0e0",textSoft:"#999",textMuted:"#666",toggleBg:"#333",toggleActive:"#444",toggleText:"#e0e0e0",headerBg:"#242424",sidebarBg:"#1e1e1e",infoBg:"#2d2840",infoBorder:"#4a3d6b",linkBg:"#2a2a2a",linkBorder:"#3a3a3a"} : {bg:"#FAFAF8",bg2:"#fff",card:"#fff",border:"#e8e6e1",text:"#1a1a1a",textSoft:"#444",textMuted:"#999",toggleBg:"#f0f0f0",toggleActive:"#fff",toggleText:"#1a1a1a",headerBg:"#fff",sidebarBg:"#fff",infoBg:"#7C6BBF08",infoBorder:"#7C6BBF22",linkBg:"#fff",linkBorder:"#e8e6e1"};
+  const scrollTo = (idx) => { setHl(idx); const el = document.getElementById(`s-${ch}-${idx}`); if (el) { el.scrollIntoView({behavior:"smooth",block:"center"}); setTimeout(()=>setHl(null),2000); } };
+  useEffect(() => { if (ref.current) ref.current.scrollTop=0; setSidebar(false); setHl(null); }, [ch]);
+  const total = phases[lang].reduce((s,p)=>s+p.chapters.length,0);
+  const done = phases[lang].reduce((s,p)=>s+p.chapters.filter(c=>c.status==="done").length,0);
+  const ui = { keyTakeaway: lang==="de"?"Key Takeaway":"Key Takeaway", links: lang==="de"?"Weiterführende Links":"Further Reading", back: lang==="de"?"← Zurück":"← Back", next: lang==="de"?"Weiter →":"Next →", end: lang==="de"?"Lernpfad abgeschlossen 🎉":"Learning path completed 🎉", of: lang==="de"?"von":"of", ch: lang==="de"?"Kapitel":"Chapter", chOf: lang==="de"?"Kapiteln":"chapters", searchPh: lang==="de"?"Suche...":"Search..." };
+
+  const searchResults = search.length > 1 ? Object.entries(C[lang]).reduce((acc, [id, chap]) => {
+    const q = search.toLowerCase();
+    const idNum = parseInt(id);
+    const phaseName = getPhase(idNum, lang).name;
+    if (chap.title.toLowerCase().includes(q)) acc.push({chId:idNum,phase:phaseName,title:chap.title,text:chap.title,type:"title"});
+    chap.sections.forEach((s,i) => {
+      if (s.heading.toLowerCase().includes(q) || s.text.toLowerCase().includes(q)) {
+        const snippet = s.text.length > 80 ? s.text.substring(0,80) + "..." : s.text;
+        acc.push({chId:idNum,phase:phaseName,title:chap.title,section:s.heading,sIdx:i,text:snippet,type:"section"});
+      }
+    });
+    return acc;
+  }, []).slice(0, 8) : [];
+
+  return (
+    <div style={{display:"flex",flexDirection:"column",height:"100vh",fontFamily:"'DM Sans','Segoe UI',system-ui,sans-serif",color:t.text,background:t.bg,overflow:"hidden"}}>
+      {/* Top Bar */}
+      <header style={{display:"flex",alignItems:"center",padding:"10px 20px",background:t.headerBg,borderBottom:`1px solid ${t.border}`,zIndex:120,minHeight:48}}>
+        <div style={{display:"flex",alignItems:"center",gap:12,flex:"0 0 auto"}}>
+          <button onClick={()=>setSidebar(!sidebar)} className="mobile-toggle" style={{display:"none",background:"none",border:"none",fontSize:20,cursor:"pointer",padding:4,color:t.textMuted}}>{sidebar?"✕":"☰"}</button>
+          <div style={{fontSize:15,fontWeight:600,letterSpacing:"-0.01em"}}>AI Learning Journey</div>
+          <span style={{fontSize:11,color:t.textMuted}}>CBS 2026</span>
+        </div>
+        <div style={{flex:1,display:"flex",justifyContent:"center",padding:"0 20px"}}>
+          <div style={{position:"relative",width:"100%",maxWidth:320}}>
+            <input type="text" value={search} onChange={e=>{setSearch(e.target.value);setSearchOpen(true)}} onFocus={()=>setSearchOpen(true)} onBlur={()=>setTimeout(()=>setSearchOpen(false),200)}
+              placeholder={ui.searchPh} style={{padding:"5px 12px 5px 28px",fontSize:12,border:`1px solid ${t.border}`,borderRadius:6,background:t.card,color:t.text,width:"100%",outline:"none"}}/>
+            <span style={{position:"absolute",left:8,top:"50%",transform:"translateY(-50%)",fontSize:13,color:t.textMuted}}>&#128269;</span>
+            {searchOpen && searchResults.length > 0 && (
+              <div style={{position:"absolute",top:"100%",left:"50%",transform:"translateX(-50%)",marginTop:4,width:360,maxHeight:320,overflow:"auto",background:t.card,border:`1px solid ${t.border}`,borderRadius:10,boxShadow:"0 8px 24px rgba(0,0,0,0.15)",zIndex:200}}>
+                {searchResults.map((r,i) => (
+                  <button key={i} onMouseDown={()=>{setCh(r.chId);setSearch("");setSearchOpen(false);if(r.sIdx!==undefined)setTimeout(()=>scrollTo(r.sIdx),100)}}
+                    style={{display:"block",width:"100%",padding:"10px 14px",border:"none",borderBottom:`1px solid ${t.border}`,background:"transparent",cursor:"pointer",textAlign:"left"}}>
+                    <div style={{fontSize:11,color:getPhase(r.chId,lang).color,fontWeight:600}}>{r.phase} · {r.title}</div>
+                    {r.section && <div style={{fontSize:13,color:t.text,marginTop:2}}>{r.section}</div>}
+                    <div style={{fontSize:11,color:t.textMuted,marginTop:2}}>{r.text}</div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <div style={{display:"flex",alignItems:"center",gap:8,flex:"0 0 auto"}}>
+          <button onClick={()=>setDark(!dark)} style={{background:"none",border:"none",fontSize:18,cursor:"pointer",padding:"4px 6px",borderRadius:4}} title={dark?"Light Mode":"Dark Mode"}>{dark?"☀️":"🌙"}</button>
+          <div style={{display:"flex",gap:4,background:t.toggleBg,borderRadius:6,padding:2}}>
+            <button onClick={()=>setLang("de")} style={{padding:"4px 12px",fontSize:12,fontWeight:600,border:"none",borderRadius:4,cursor:"pointer",background:lang==="de"?t.toggleActive:"transparent",color:lang==="de"?t.toggleText:t.textMuted,boxShadow:lang==="de"?"0 1px 3px rgba(0,0,0,0.15)":"none",transition:"all 0.15s"}}>DE</button>
+            <button onClick={()=>setLang("en")} style={{padding:"4px 12px",fontSize:12,fontWeight:600,border:"none",borderRadius:4,cursor:"pointer",background:lang==="en"?t.toggleActive:"transparent",color:lang==="en"?t.toggleText:t.textMuted,boxShadow:lang==="en"?"0 1px 3px rgba(0,0,0,0.15)":"none",transition:"all 0.15s"}}>EN</button>
+          </div>
+        </div>
+      </header>
+
+      <div style={{display:"flex",flex:1,overflow:"hidden"}}>
+
+      <aside className={`sidebar ${sidebar?"open":""}`} style={{width:280,minWidth:280,background:t.sidebarBg,borderRight:`1px solid ${t.border}`,display:"flex",flexDirection:"column",overflow:"hidden",zIndex:100}}>
+        <div style={{padding:"16px 20px 12px",borderBottom:`1px solid ${t.border}`}}>
+          <div style={{fontSize:12,color:t.textMuted}}>{done} {ui.of} {total} {ui.chOf}</div>
+          <div style={{marginTop:6,height:3,background:dark?"#333":"#eee",borderRadius:2}}><div style={{height:3,width:`${(done/total)*100}%`,background:"#1D9E75",borderRadius:2}}/></div>
+        </div>
+        <nav style={{flex:1,overflow:"auto",padding:"8px 0"}}>
+          {phases[lang].map(p=>(<div key={p.name} style={{marginBottom:4}}>
+            <div style={{padding:"10px 20px 4px",fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.06em",color:p.color}}>{p.name}</div>
+            {p.chapters.map(c=>{const isA=c.id===ch,isD=c.status==="done"; return (
+              <button key={c.id} onClick={()=>setCh(c.id)} style={{display:"flex",alignItems:"flex-start",gap:10,width:"100%",padding:"8px 20px",border:"none",background:isA?`${p.color}${dark?"33":"11"}`:"transparent",cursor:"pointer",textAlign:"left",borderLeft:isA?`3px solid ${p.color}`:"3px solid transparent"}}>
+                <span style={{minWidth:22,height:22,borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:600,marginTop:1,background:isD?"#1D9E75":isA?p.color:(dark?"#444":"#e8e6e1"),color:isD||isA?"#fff":(dark?"#888":"#999")}}>{isD?"✓":c.id}</span>
+                <div><div style={{fontSize:13,fontWeight:isA?600:400,color:isA?t.text:(dark?"#aaa":"#555"),lineHeight:1.3}}>{c.title}</div><div style={{fontSize:11,color:t.textMuted,marginTop:1}}>{c.subtitle}</div></div>
+              </button>);})}
+          </div>))}
+        </nav>
+        <div style={{padding:"12px 20px",borderTop:`1px solid ${t.border}`,fontSize:11,color:t.textMuted}}>16 {ui.chOf}</div>
+      </aside>
+
+      <main ref={ref} style={{flex:1,overflow:"auto"}}>
+        <div style={{maxWidth:720,margin:"0 auto",padding:"40px 32px 80px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:8}}>
+            <span style={{fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.06em",color:phase.color}}>{phase.name}</span>
+            <span style={{fontSize:11,color:t.textMuted}}>·</span>
+            <span style={{fontSize:11,color:t.textMuted}}>{ui.ch} {ch} {ui.of} {total}</span>
+          </div>
+          <h1 style={{fontSize:28,fontWeight:700,letterSpacing:"-0.02em",margin:"0 0 16px",lineHeight:1.2}}>{chapter.title}</h1>
+          <p style={{fontSize:16,lineHeight:1.7,color:t.textSoft,marginBottom:32,borderLeft:`3px solid ${phase.color}`,paddingLeft:16}}>{chapter.intro}</p>
+          {chapter.video && <VideoEmbed videoId={chapter.video}/>}
+          {chapter.diagram==="ai-hierarchy" && <AIHierarchy onCircleClick={scrollTo} dark={dark}/>}
+          {chapter.diagram==="mcp-a2a" && <McpA2aDiagram dark={dark}/>}
+          {chapter.timeline && <Timeline items={chapter.timeline} onMilestoneClick={scrollTo} activeIdx={hl}/>}
+          {chapter.sections.map((s,i)=>{const isH=hl===i; return (
+            <div key={i} id={`s-${ch}-${i}`} style={{marginBottom:28,padding:isH?"16px 20px":"0",background:isH?`${phase.color}${dark?"22":"08"}`:"transparent",borderLeft:isH?`4px solid ${phase.color}`:"4px solid transparent",borderRadius:isH?8:0,transition:"all 0.4s"}}>
+              <h3 style={{fontSize:16,fontWeight:600,color:isH?phase.color:t.text,margin:"0 0 8px"}}>{s.heading}</h3>
+              {s.text.split("\n\n").map((block,bi) => {
+                const lines = block.split("\n");
+                const bullets = lines.filter(l => l.startsWith("* "));
+                const prose = lines.filter(l => !l.startsWith("* ")).join(" ");
+                return (<div key={bi}>
+                  {prose && <p style={{fontSize:15,lineHeight:1.7,color:t.textSoft,margin:bi>0?"10px 0 0":0}}>{prose}</p>}
+                  {bullets.length > 0 && <ul style={{margin:"8px 0 0",paddingLeft:20}}>
+                    {bullets.map((b,j) => <li key={j} style={{fontSize:14,lineHeight:1.7,color:t.textSoft,marginBottom:2}}>{b.slice(2)}</li>)}
+                  </ul>}
+                </div>);
+              })}
+              {s.video && <VideoEmbed videoId={s.video}/>}
+              {s.infobox && (<div style={{margin:"16px 0 4px",padding:"16px 20px",background:dark?t.infoBg:"#7C6BBF08",border:`1px solid ${dark?t.infoBorder:"#7C6BBF22"}`,borderRadius:10,borderLeft:"4px solid #7C6BBF"}}>
+                <div style={{fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.05em",color:"#7C6BBF",marginBottom:8}}>{s.infobox.title}</div>
+                {s.infobox.text.split("\n\n").map((p,j)=>(<p key={j} style={{fontSize:14,lineHeight:1.65,color:t.textSoft,margin:j>0?"10px 0 0":0}}>{p}</p>))}
+              </div>)}
+              {s.sectionLinks && <SectionLinks links={s.sectionLinks} color={phase.color}/>}
+            </div>);})}
+          <div style={{background:`${phase.color}${dark?"22":"0a"}`,border:`1px solid ${phase.color}${dark?"44":"22"}`,borderRadius:10,padding:"16px 20px",marginTop:36,marginBottom:36}}>
+            <div style={{fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.05em",color:phase.color,marginBottom:6}}>{ui.keyTakeaway}</div>
+            <p style={{fontSize:15,lineHeight:1.6,color:dark?"#ccc":"#333",margin:0}}>{chapter.takeaway}</p>
+          </div>
+          {chapter.links?.length>0 && (<div style={{marginTop:32}}>
+            <div style={{fontSize:12,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.05em",color:t.textMuted,marginBottom:12}}>{ui.links}</div>
+            <div style={{display:"flex",flexDirection:"column",gap:8}}>
+              {chapter.links.map((l,i)=>(<a key={i} href={l.url} target="_blank" rel="noopener noreferrer" style={{display:"flex",alignItems:"center",gap:8,padding:"10px 14px",background:t.linkBg,border:`1px solid ${t.linkBorder}`,borderRadius:8,textDecoration:"none",color:t.text,fontSize:14}} onMouseEnter={e=>e.currentTarget.style.borderColor=phase.color} onMouseLeave={e=>e.currentTarget.style.borderColor=t.linkBorder}><span style={{color:phase.color,fontSize:16}}>&#8599;</span><span>{l.label}</span></a>))}
+            </div>
+          </div>)}
+          <div style={{display:"flex",justifyContent:"space-between",marginTop:48,paddingTop:24,borderTop:`1px solid ${t.border}`}}>
+            {ch>1?<button onClick={()=>setCh(ch-1)} style={{padding:"10px 20px",background:"none",border:`1px solid ${t.border}`,borderRadius:8,cursor:"pointer",fontSize:13,color:t.textMuted}}>{ui.back}</button>:<div/>}
+            {ch<total?<button onClick={()=>setCh(ch+1)} style={{padding:"10px 20px",background:phase.color,border:"none",borderRadius:8,cursor:"pointer",fontSize:13,color:"#fff",fontWeight:500}}>{ui.next}</button>:<div style={{fontSize:13,color:t.textMuted,padding:"10px 0"}}>{ui.end}</div>}
+          </div>
+        </div>
+      </main>
+      </div>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+        .sidebar{transition:transform 0.25s ease}
+        @media(max-width:768px){
+          .sidebar{position:fixed!important;left:0;top:48px;height:calc(100vh - 48px);transform:translateX(-100%);box-shadow:4px 0 24px rgba(0,0,0,0.1)}
+          .sidebar.open{transform:translateX(0)}
+          .mobile-toggle{display:flex!important}
+        }
+      `}</style>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<LearningHub />);
+</script>
+</body>
+</html>
